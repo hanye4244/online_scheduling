@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-13 12:04:37
-@LastEditTime: 2020-05-08 16:11:11
+@LastEditTime: 2020-05-09 17:38:49
 @LastEditors: Ye Han
 @Description:
 @FilePath: \Online_Scheduling\main.py
@@ -33,7 +33,7 @@ import queue_delay_aware
 import queue_plq
 import region_id
 
-# System initialization.
+# tag: System initialization.
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 # The number of PCSs, regions and PETs.
@@ -41,7 +41,6 @@ number_of_pcs = 6
 number_of_region = 4
 number_of_pet = 15
 # Initialize pcs.
-# FIXME:
 pcs_lat = np.array([[39.915], [39.945], [39.975],
                     [39.915], [39.945], [39.975]])
 pcs_lon = np.array([[116.325], [116.375], [116.325],
@@ -170,7 +169,7 @@ for V in [2]:
         profit = pcs_profit.pcs_profit(
             service_fee, pcs_cost)
 
-    # Update.
+    # Tag: Update.
         pet_state = pet_trigger_state.pet_trigger_state(
             pet_state, pet_recommended, pet_pick_up, pet_completed, number_of_pet)
         pet_soc = pet_soc_time_slot.pet_soc_time_slot(
@@ -189,7 +188,8 @@ for V in [2]:
         block_plq_list.append(block_plq)
         passenger_demand_list.append(plq_arrival_rate.sum())
         profit_list.append(profit.sum())
-        # print('t =', t)
+        # tag: time slot print.
+        print('t =', t)
         # print('num_pet_recommended', pet_recommended.sum())
         # print('pet_pick_up_probability', pet_pick_up_probability)
         # print('section_plq', section_plq)
@@ -202,11 +202,13 @@ for V in [2]:
         # print('pet_pick_up_region', pet_pick_up_region)
         # print('pet_region', pet_region)
     pass
+    # Tag: Parameter print.
     profit_mean_list.append(np.mean(profit_list))
     block_cdq_mean_list.append(np.mean(block_cdq_list))
     block_plq_mean_list.append(np.mean(block_plq_list))
     # section_cdq_mean_list.append(np.mean(section_cdq_list))
     # section_plq_mean_list.append(np.mean(section_plq_list))
     # print('worst_case_delay_guarantee =', worst_case_delay_guarantee)
+# Tag: Result print.
 print(profit_list)
 print(passenger_demand_list)
