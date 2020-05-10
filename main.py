@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-13 12:04:37
-@LastEditTime: 2020-05-09 17:38:49
+@LastEditTime: 2020-05-09 18:10:39
 @LastEditors: Ye Han
 @Description:
 @FilePath: \Online_Scheduling\main.py
@@ -168,7 +168,6 @@ for V in [2]:
             cdq_arrival_rate, per_service_fee)
         profit = pcs_profit.pcs_profit(
             service_fee, pcs_cost)
-
     # Tag: Update.
         pet_state = pet_trigger_state.pet_trigger_state(
             pet_state, pet_recommended, pet_pick_up, pet_completed, number_of_pet)
@@ -190,6 +189,7 @@ for V in [2]:
         profit_list.append(profit.sum())
         # tag: time slot print.
         print('t =', t)
+        print('utility function', utility_function * action)
         # print('num_pet_recommended', pet_recommended.sum())
         # print('pet_pick_up_probability', pet_pick_up_probability)
         # print('section_plq', section_plq)
@@ -202,13 +202,13 @@ for V in [2]:
         # print('pet_pick_up_region', pet_pick_up_region)
         # print('pet_region', pet_region)
     pass
-    # Tag: Parameter print.
-    profit_mean_list.append(np.mean(profit_list))
-    block_cdq_mean_list.append(np.mean(block_cdq_list))
-    block_plq_mean_list.append(np.mean(block_plq_list))
+    # tag: Parameter print.
+    # profit_mean_list.append(np.mean(profit_list))
+    # block_cdq_mean_list.append(np.mean(block_cdq_list))
+    # block_plq_mean_list.append(np.mean(block_plq_list))
     # section_cdq_mean_list.append(np.mean(section_cdq_list))
     # section_plq_mean_list.append(np.mean(section_plq_list))
     # print('worst_case_delay_guarantee =', worst_case_delay_guarantee)
 # Tag: Result print.
-print(profit_list)
-print(passenger_demand_list)
+# print(profit_list)
+# print(passenger_demand_list)
