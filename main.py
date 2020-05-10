@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-13 12:04:37
-@LastEditTime: 2020-05-09 18:10:39
+@LastEditTime: 2020-05-10 11:17:50
 @LastEditors: Ye Han
 @Description:
 @FilePath: \Online_Scheduling\main.py
@@ -181,15 +181,15 @@ for V in [2]:
             block_plq, plq_arrival_rate, plq_service_rate, number_of_region)
         block_delay_aware = queue_delay_aware.queue_delay_aware(
             block_delay_aware, worst_case_delay_guarantee, delay_aware_service_rate, number_of_region, block_plq)
-        section_cdq_list.append(section_cdq)
-        section_plq_list.append(section_plq)
-        block_cdq_list.append(block_cdq)
-        block_plq_list.append(block_plq)
-        passenger_demand_list.append(plq_arrival_rate.sum())
-        profit_list.append(profit.sum())
         # tag: time slot print.
-        print('t =', t)
-        print('utility function', utility_function * action)
+        # section_cdq_list.append(section_cdq)
+        # section_plq_list.append(section_plq)
+        # block_cdq_list.append(block_cdq)
+        # block_plq_list.append(block_plq)
+        # passenger_demand_list.append(plq_arrival_rate.sum())
+        profit_list.append(profit.sum())
+        # print('t =', t)
+        # print('utility function', utility_function * action)
         # print('num_pet_recommended', pet_recommended.sum())
         # print('pet_pick_up_probability', pet_pick_up_probability)
         # print('section_plq', section_plq)
@@ -210,5 +210,5 @@ for V in [2]:
     # section_plq_mean_list.append(np.mean(section_plq_list))
     # print('worst_case_delay_guarantee =', worst_case_delay_guarantee)
 # Tag: Result print.
-# print(profit_list)
+print(profit_list)
 # print(passenger_demand_list)
