@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 10:05:34
-@LastEditTime: 2020-05-09 17:25:15
+@LastEditTime: 2020-05-11 10:40:36
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -22,8 +22,7 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     cdq_arrival_rate = cv.sum(cv.multiply(pet_power_demand, x),
                               axis=1, keepdims=True) + pev_arrival_rate
     section_cdq_1 = cdq_arrival_rate - cdq_service_rate
-
-    section_cdq = 0.001 * cv.sum(cv.multiply(section_cdq_1, block_cdq))
+    section_cdq = cv.sum(cv.multiply(section_cdq_1, block_cdq))
     # section_plq
     # pick up constraint
     pet = pd.DataFrame(pet_state, columns=['state'])
@@ -52,8 +51,8 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     # section: profit
     section_profit = cv.sum(cv.multiply(
         cdq_arrival_rate, per_service_fee)-pcs_cost)
-    objects = section_cdq - V * section_profit
-    # objects = section_plq + section_delay_aware - V * section_profit
+    # objects = section_cdq - V * section_profit
+    objects = section_plq + section_delay_aware - V * section_profit
     constraints_2_right = np.full((number_of_pet, 1), 1)
     state_test = np.where((pet_state == 0), 1, 0)
     # SOC

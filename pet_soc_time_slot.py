@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-19 11:01:41
-@LastEditTime: 2020-05-07 17:06:34
+@LastEditTime: 2020-05-11 10:50:27
 @LastEditors: Ye Han
 @Description: 
 @FilePath: \Online_Scheduling\pet_soc_time_slot.py
@@ -19,11 +19,11 @@ def pet_soc_time_slot(pet_state, pet_soc, number_of_pet, block_cdq, action):
     pet_block_cdq = (block_cdq * action).sum(axis=0).reshape(number_of_pet, 1)
     pet = pd.DataFrame(np.concatenate(
         [pet_state, pet_soc, pet_block_cdq], axis=1), columns=['state', 'soc', 'block_cdq'])
-    pet['soc'] = pet.apply(lambda x: (x['soc'] - 8)
+    pet['soc'] = pet.apply(lambda x: (x['soc'] - 0.06)
                            if (x['state'] == 0) else x['soc'], axis=1)
-    pet['soc'] = pet.apply(lambda x: (x['soc'] - 8)
+    pet['soc'] = pet.apply(lambda x: (x['soc'] - 0.05)
                            if (x['state'] == 1) else x['soc'], axis=1)
-    pet['soc'] = pet.apply(lambda x: (x['soc'] + 7200/(560+x['block_cdq']))
+    pet['soc'] = pet.apply(lambda x: (x['soc'] + 72/(560+x['block_cdq']))
                            if (x['state'] == 2) else x['soc'], axis=1)
     # pet['soc'] = pet.apply(lambda x: 50 if (
     #     (x['soc'] < 15) & (x['state'] != 2)) else x['soc'], axis=1)

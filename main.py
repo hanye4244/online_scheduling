@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-13 12:04:37
-@LastEditTime: 2020-05-10 11:17:50
+@LastEditTime: 2020-05-11 15:04:15
 @LastEditors: Ye Han
 @Description:
 @FilePath: \Online_Scheduling\main.py
@@ -37,14 +37,14 @@ import region_id
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 # The number of PCSs, regions and PETs.
-number_of_pcs = 6
+number_of_pcs = 9
 number_of_region = 4
-number_of_pet = 15
+number_of_pet = 50
 # Initialize pcs.
-pcs_lat = np.array([[39.915], [39.945], [39.975],
-                    [39.915], [39.945], [39.975]])
-pcs_lon = np.array([[116.325], [116.375], [116.325],
-                    [116.375], [116.325], [116.375]])
+pcs_lat = np.array([[39.925], [39.95], [39.975],
+                    [39.925], [39.95], [39.975], [39.925], [39.95], [39.975]])
+pcs_lon = np.array([[116.325], [116.35], [116.375],
+                    [116.325], [116.35], [116.375], [116.325], [116.35], [116.375]])
 pcs_region = region_id.region_id(pcs_lat, pcs_lon)
 # PCS service rate.
 number_of_plug = 1
@@ -57,11 +57,14 @@ shape_capacity = np.tile(pet_battery_capacity, (number_of_pcs, 1))
 power_consumption = np.full((1, number_of_pet), 0.4)
 shape_power_consumption = np.tile(power_consumption, (number_of_pcs, 1))
 # The service fee.
-per_service_fee = 1
+per_service_fee = 10
 # The revenues of PETs during each time slot.
 pet_average_revenue = 25
 # Kilometer per time slot.
 average_speed = 10
+# Time slot electricity price.
+electricity_price = [0.38,  0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.38, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 1.32, 1.32, 1.32,
+                     1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 1.32, 0.83, 0.83, 0.83, 0.83, 0.83, 0.83]
 profit_mean_list = []
 block_cdq_mean_list = []
 block_plq_mean_list = []
@@ -70,7 +73,7 @@ section_cdq_mean_list = []
 section_plq_mean_list = []
 
 
-for V in [2]:
+for V in [0, 0.1, 0.3, 0.5, 0.8, 1, 2, 3, 4, 5, 6]:
     # Initialize pet.
     profit_list = []
     block_cdq_list = []
@@ -79,54 +82,28 @@ for V in [2]:
     section_cdq_list = []
     section_plq_list = []
     passenger_demand_list = []
-    pet_lat = np.array([[39.95699865],
-                        [39.90546982],
-                        [39.9683827],
-                        [39.94013469],
-                        [39.92567399],
-                        [39.93289525],
-                        [39.95132112],
-                        [39.95105727],
-                        [39.96777505],
-                        [39.99871827],
-                        [39.99175799],
-                        [39.92021242],
-                        [39.99900578],
-                        [39.99060987],
-                        [39.95592922]])
-    pet_lon = np.array([[116.39512796],
-                        [116.36945924],
-                        [116.38476896],
-                        [116.39305604],
-                        [116.38683138],
-                        [116.30387258],
-                        [116.3030354],
-                        [116.36599219],
-                        [116.39197718],
-                        [116.37723497],
-                        [116.30692452],
-                        [116.35764129],
-                        [116.30713447],
-                        [116.32663698],
-                        [116.319976]])
-    pet_soc = np.arange(75, 90, 1).reshape(number_of_pet, 1)
+    pet_lat = np.array([[39.96253373], [39.91457459], [39.92588301], [39.94986468], [39.9264644], [39.92094834], [39.90860704], [39.90056609], [39.98933747], [39.95777496], [39.93228032], [39.94989055], [39.99973724], [39.90173232], [39.92445588], [39.9616257], [39.94763049], [39.97825631], [39.99229355], [39.91681799], [39.92534945], [39.93672401], [39.92826405], [39.97009977], [39.94988704], [
+        39.91694974], [39.93304921], [39.99114325], [39.94262374], [39.99083236], [39.90737595], [39.90142823], [39.91180923], [39.92800281], [39.99798076], [39.93303175], [39.92250838], [39.98032591], [39.99064253], [39.91587499], [39.9575109], [39.97697965], [39.96476319], [39.90019632], [39.91797975], [39.94547393], [39.96540044], [39.97884827], [39.90734119], [39.95631456]])
+    pet_lon = np.array([[116.36472475], [116.3882789], [116.32234297], [116.38212617], [116.31774475], [116.30214439], [116.35531708], [116.37685496], [116.39610188], [116.30930473], [116.30828321], [116.39485067], [116.37321686], [116.37615293], [116.35095054], [116.3919535], [116.39262153], [116.30616914], [116.36412417], [116.39627141], [116.34724162], [116.35656495], [116.34527461], [116.3708312], [
+                       116.35659439], [116.3600659], [116.30292666], [116.35701078], [116.32588347], [116.31544209], [116.39851909], [116.32593198], [116.36915791], [116.33335334], [116.3583916], [116.37845508], [116.37318405], [116.34356882], [116.33087179], [116.3663933], [116.38774454], [116.38550602], [116.38443759], [116.3698688], [116.34138473], [116.37817646], [116.38369842], [116.38800506], [116.31696235], [116.3323365]])
+    pet_soc = np.array([[0.82], [0.75], [0.78], [0.74], [0.72], [0.85], [0.80], [0.74], [0.88], [0.71], [0.77], [0.73], [0.86], [0.73], [0.83], [0.84], [0.85], [0.79], [0.85], [0.81], [0.85], [0.73], [0.84], [0.82], [
+                       0.82], [0.71], [0.80], [0.82], [0.71], [0.76], [0.85], [0.74], [0.85], [0.87], [0.75], [0.87], [0.75], [0.78], [0.74], [0.88], [0.73], [0.84], [0.86], [0.85], [0.76], [0.81], [0.83], [0.82], [0.76], [0.88]])
     pet_state = np.zeros((number_of_pet, 1))
     pet_pick_up = np.zeros((number_of_pet, 1))
     pet_put_down = np.zeros((number_of_pet, 1))
     pet_completed = np.zeros((number_of_pet, 1))
     pet_recommended = np.zeros((number_of_pet, 1))
     # Initialize blocks of queues.
-    block_cdq = np.full((number_of_pcs, 1), 30)
+    block_cdq = np.full((number_of_pcs, 1), 0.3)
     block_plq = np.full((number_of_region, 1), 4)
     block_delay_aware = np.full((number_of_region, 1), 0)
     # Variable parameter.
     worst_case_delay_guarantee = 3
     pet_cost_max = 600
     # Time slot iteration.
-    for t in range(18):
-        electricity_price = np.random.choice(
-            [0.2, 0.2, 0.2, 0.2], p=np.array([0.25, 0.25, 0.25, 0.25]))
-        pcs_cost = np.full((number_of_pcs, 1), electricity_price * 0.1)
+    for t in range(72):
+        electricity_price_slot = electricity_price[t]
+        pcs_cost = np.full((number_of_pcs, 1), electricity_price_slot * 0.1)
         pet_region = region_id.region_id(pet_lat, pet_lon)
         manhattan_pcs_pet = distance.distance_between_pcs_pet(
             pet_lat, pet_lon, pcs_lat, pcs_lon, number_of_pcs, number_of_pet)
@@ -142,10 +119,10 @@ for V in [2]:
         pet_remaining_power = shape_soc - pet_power_consumption
         pet_power_demand = shape_capacity - pet_remaining_power
         charging_time = pet_power_demand / 15
-        number_pev_arrival = np.random.randint(1, 2, size=[number_of_pcs, 1])
-        pev_arrival_rate = number_pev_arrival * 20
+        number_pev_arrival = np.random.randint(0, 10, size=[number_of_pcs, 1])
+        pev_arrival_rate = number_pev_arrival * 0.5
         utility_function = pet_utility_function.pet_utility_function(number_of_region, number_of_pet, number_of_pcs, pet_average_revenue, pcs_region,
-                                                                     pet_region, pet_pick_up_probability, pick_up_probability, pet_power_demand, electricity_price, shape_waiting_time, charging_time)
+                                                                     pet_region, pet_pick_up_probability, pick_up_probability, pet_power_demand, electricity_price_slot, shape_waiting_time, charging_time)
         pet_put_down = pet_trigger_put_down.pet_trigger_put_down(
             pet_state, number_of_pet, pet_soc)
         pet_state = pet_trigger_state_put_down.pet_trigger_state_put_down(
@@ -184,8 +161,8 @@ for V in [2]:
         # tag: time slot print.
         # section_cdq_list.append(section_cdq)
         # section_plq_list.append(section_plq)
-        # block_cdq_list.append(block_cdq)
-        # block_plq_list.append(block_plq)
+        block_cdq_list.append(block_cdq.sum())
+        block_plq_list.append(block_plq.sum())
         # passenger_demand_list.append(plq_arrival_rate.sum())
         profit_list.append(profit.sum())
         # print('t =', t)
@@ -203,12 +180,16 @@ for V in [2]:
         # print('pet_region', pet_region)
     pass
     # tag: Parameter print.
-    # profit_mean_list.append(np.mean(profit_list))
-    # block_cdq_mean_list.append(np.mean(block_cdq_list))
-    # block_plq_mean_list.append(np.mean(block_plq_list))
+    profit_mean_list.append(np.mean(profit_list))
+    block_cdq_mean_list.append(np.mean(block_cdq_list))
+    block_plq_mean_list.append(np.mean(block_plq_list))
     # section_cdq_mean_list.append(np.mean(section_cdq_list))
     # section_plq_mean_list.append(np.mean(section_plq_list))
     # print('worst_case_delay_guarantee =', worst_case_delay_guarantee)
 # Tag: Result print.
-print(profit_list)
+print('profit_mean_list=', profit_mean_list)
+print('block_cdq_mean_list=', block_cdq_mean_list)
+print('block_plq_mean_list=', block_plq_mean_list)
+# print(profit_list)
 # print(passenger_demand_list)
+# print(block_plq_list)
