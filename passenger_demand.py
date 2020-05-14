@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-19 16:02:17
-@LastEditTime: 2020-05-11 12:16:52
+@LastEditTime: 2020-05-12 18:27:27
 @LastEditors: Ye Han
 @Description:
 @FilePath: \Online_Scheduling\passenger_demand.py
@@ -52,7 +52,7 @@ def passenger_demand(number_of_region, t):
                                   13, 11, 10, 10, 10,  9, 10,  9,  9, 10, 11, 11, 11, 11, 11, 10,  9,  8,  8,  8,  8,  8,  8,  8],
                                  [8,  8,  8,  7,  8,  7,  6,  7,  7,  7,  7,  6,  6,  6,  5,  4,  4,  4,  4,  4,  5,  5,  5,  7,
                                   7,  8, 10, 11, 11, 13, 14, 14, 15, 15, 17, 16, 16, 15, 12, 11, 11, 11, 10, 11, 11, 11, 10, 10,
-                                  8,  9,  8,  8,  8,  7,  7,  7,  7,  8,  9, 11, 10,  9,  8,  8,  7,  6,  7,  7,  7,  7,  8,  9]])
+                                  8,  9,  8,  8,  8,  7,  7,  7,  7,  8,  9, 11, 10,  9,  8,  8,  7,  6,  7,  7,  7,  7,  8,  9]]) - 4
     passenger_demand_slot = passenger_demand[:, t]
     return passenger_demand_slot.reshape(number_of_region, 1)
 

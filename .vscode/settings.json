@@ -7,5 +7,6 @@
     "cSpell.ignoreWords": [
         "online",
         "scheduling"
-    ]
+    ],
+    "python.pythonPath": "C:\\Users\\hanye\\Anaconda3\\python.exe"
 }

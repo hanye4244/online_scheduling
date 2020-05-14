@@ -27,7 +27,7 @@ def objective_function(action, block_cdq, block_plq, block_delay_aware, V, pet_s
     cdq_arrival_rate = pcs_arrival.pcs_arrival(
         action, pet_power_demand, number_of_pcs, number_of_pet, pev_arrival_rate)
     # print('cdq_arrival_rate=', cdq_arrival_rate)
-    plq_service_rate = pet_number_pick_up.pet_number_pick_up(
+    plq_pet_choosete = pet_number_pick_up.pet_number_pick_up(
         pet_pick_up, number_of_region, pet_region)
     # print('plq_service_rate=', plq_service_rate)
     delay_aware_service_rate = plq_service_rate
