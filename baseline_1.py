@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-13 12:04:37
-@LastEditTime: 2020-05-15 17:45:30
+@LastEditTime: 2020-05-15 17:37:26
 @LastEditors: Ye Han
 @Description:
 @FilePath: \Online_Scheduling\main.py
@@ -10,11 +10,16 @@
 All rights reserved.
 '''
 
+
+# tag: System initialization.
+
+
 import numpy as np
 import pandas as pd
 
 import distance
 import integer_opt
+import nearest_pcs_choose
 import passenger_demand
 import pcs_arrival
 import pcs_profit
@@ -35,7 +40,6 @@ import queue_delay_aware
 import queue_plq
 import region_id
 
-# tag: System initialization.
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 # The number of PCSs, regions and PETs.
@@ -56,7 +60,7 @@ cdq_service_rate = np.full(
 # PET battery characters.
 pet_battery_capacity = np.full((1, number_of_pet), 1)
 shape_capacity = np.tile(pet_battery_capacity, (number_of_pcs, 1))
-power_consumption = np.full((1, number_of_pet), 0.004)
+power_consumption = np.full((1, number_of_pet), 0.04)
 shape_power_consumption = np.tile(power_consumption, (number_of_pcs, 1))
 # The service fee.
 per_service_fee = 100
@@ -76,7 +80,7 @@ section_plq_mean_list = []
 pet_utility_function_mean_list = []
 worst_case_delay_guarantee = 3
 # worst_case_delay_guarantee_list = [7]
-V_list = [5]
+V_list = [1]
 # V_list = [7, 8, 9, 10]
 for V in V_list:
     # Initialize pet.
@@ -143,12 +147,30 @@ for V in V_list:
             number_of_region, t)
         delay_aware_arrival_rate = np.full(
             (number_of_region, 1), worst_case_delay_guarantee)
-        action, pet_pick_up_region, section_plq, section_delay_aware, section_cdq, section_profit, pet_available_region = integer_opt.integer_opt(
-            number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_state, pet_lat, pet_lon, number_of_region, pet_region, pet_soc, pet_pick_up_probability, block_plq, plq_arrival_rate, delay_aware_arrival_rate, block_delay_aware, utility_function, pet_remaining_power, V, per_service_fee, pev_arrival_rate, cdq_service_rate, pcs_cost)
+        action = np.zeros((number_of_pcs, number_of_pet))
+        action, pet_recommended = nearest_pcs_choose.nearest_pcs_choose(
+            pet_soc, manhattan_pcs_pet, number_of_pet, action)
+        pet_region_matrix = np.zeros((number_of_region, number_of_pet))
+        for i in range(number_of_pet):
+            for j in range(number_of_region):
+                if pet_region[i] == j:
+                    pet_region_matrix[j, i] = 1
+                pass
+            pass
+        pass
+        pet_non_recommended = (np.ones((number_of_pet, 1)) - pet_recommended)
+        # print(pet_recommended)
+        pet_available_ini = np.where(
+            ((pet_state == 0) & (pet_soc > 0.15)), 1, 0)
+        pet_available = pet_available_ini * pet_non_recommended
+        # print(pet_region_matrix)
+        # print(pet_available)
+        pet_available_region = np.dot(pet_region_matrix, pet_available)
+        # print(pet_available_region)
+        pet_pick_up_region = np.minimum(pet_available_region, block_plq)
+        # print(pet_pick_up_region)
         pet_pick_up = pet_trigger_pick_up.pet_trigger_pick_up(
             pet_state, pet_recommended, number_of_region, pet_region, pet_soc, pet_pick_up_region, pet_pick_up)
-        pet_recommended = pet_trigger_recommended.pet_trigger_recommended(
-            number_of_pet, action)
         cdq_arrival_rate = pcs_arrival.pcs_arrival(
             action, pet_power_demand, number_of_pcs, number_of_pet, pev_arrival_rate)
         plq_service_rate = pet_pick_up_region
@@ -174,8 +196,8 @@ for V in V_list:
         # section_cdq_list.append(section_cdq)
         # section_plq_list.append(section_plq)
         # passenger_demand_list.append(plq_arrival_rate.sum())
-        block_cdq_list.append(block_cdq[0])
-        block_plq_list.append(block_plq[0])
+        block_cdq_list.append(block_cdq.sum())
+        block_plq_list.append(block_plq.sum())
         profit_list.append(profit.sum())
         num_pet_recommended_list.append(pet_recommended.sum())
         pet_put_down_list.append(pet_put_down.sum())
@@ -184,10 +206,10 @@ for V in V_list:
         # print('SOC', pet_soc)
     pass
     # tag: Parameter print.
-    # profit_mean_list.append(np.mean(profit_list))
-    # block_cdq_mean_list.append(np.mean(block_cdq_list))
-    # block_plq_mean_list.append(np.mean(block_plq_list))
-    # pet_utility_function_mean_list.append(np.mean(pet_utility_function_list))
+    profit_mean_list.append(np.mean(profit_list))
+    block_cdq_mean_list.append(np.mean(block_cdq_list))
+    block_plq_mean_list.append(np.mean(block_plq_list))
+    pet_utility_function_mean_list.append(np.mean(pet_utility_function_list))
     # print('block_plq_list',  block_plq_list)
     # print('num_pet_recommended_list', num_pet_recommended_list)
     # print('pet_put_down_list', pet_put_down_list)
@@ -200,13 +222,11 @@ for V in V_list:
 # print('epsilon', epsilon_list)
 # print('epsilon', worst_case_delay_guarantee_list)
 # print('V', V_list)
-# print('profit_mean_list', profit_mean_list)
+print('profit_mean_list', profit_mean_list)
 # print('block_cdq_mean_list', block_cdq_mean_list)
 # print('block_plq_mean_list', block_plq_mean_list)
-print('pet_utility_function_mean_list', pet_utility_function_mean_list)
-print('*'*100)
-# print('block_cdq_list', block_cdq_list)
-print('block_plq_list', block_plq_list)
+# print('pet_utility_function_mean_list', pet_utility_function_mean_list)
+print('-'*100)
 # print(profit_list)
 # print(passenger_demand_list)
 # print(block_plq_list)

@@ -1,0 +1,59 @@
+[33mcommit 6f9155ca856bc3fdff02274b8ff8d06ad8dd3f09[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: hanye4244 <hanye4244@gmail.com>
+Date:   Thu May 14 10:56:13 2020 +0800
+
+    SOC \in 1~10
+
+[33mcommit 0387467b082786f889744ec545d820e12ddf6fa9[m
+Author: hanye4244 <hanye4244@gmail.com>
+Date:   Mon May 11 15:06:16 2020 +0800
+
+    change the number of PETs and PCSs
+
+[33mcommit 101759f86d4a7761fd6e6c3c8b55694ecb009682[m
+Author: hanye4244 <hanye4244@gmail.com>
+Date:   Sun May 10 17:14:54 2020 +0800
+
+    add random decision(nearest pcs)
+
+[33mcommit 80a2b40f175603699dd26b4c71209a69eb8aeffa[m
+Author: hanye4244 <hanye4244@gmail.com>
+Date:   Sun May 10 09:04:55 2020 +0800
+
+    delete txt
+
+[33mcommit 4fd9ef1083588707d3ded9994c62aa84a1be6436[m
+Author: hanye4244 <hanye4244@gmail.com>
+Date:   Sun May 10 09:03:44 2020 +0800
+
+    something
+
+[33mcommit d8575e805ad8b5a74ab421a11f6dcfd95d89b221[m
+Author: hanye4244 <hanye4244@gmail.com>
+Date:   Sun May 10 09:03:05 2020 +0800
+
+    some change
+
+[33mcommit 4978e9ec6ef534c962b96f4bbdbb72090dec0374[m
+Author: Han <hanye4244@gmail.com>
+Date:   Sat May 9 17:42:19 2020 +0800
+
+    delete constraint files
+
+[33mcommit bd96511b1c99203f47fb1b81d2c5b2008b1d5a6d[m
+Author: hanye4244 <hanye4244@gmail.com>
+Date:   Sat May 9 17:23:50 2020 +0800
+
+    readme.txt
+
+[33mcommit 24799bdac0c46619158293b577d265c62ecb218a[m
+Author: hanye4244 <hanye4244@gmail.com>
+Date:   Sat May 9 17:18:21 2020 +0800
+
+    without consider PET utility function
+
+[33mcommit 58ee06c03242bc85c9ccf029ae49bd094826d2ce[m
+Author: Y,Han <hanye4244@gmail.com>
+Date:   Sun May 10 08:57:43 2020 +0800
+
+    Initial commit

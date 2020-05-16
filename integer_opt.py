@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 10:05:34
-@LastEditTime: 2020-05-14 10:47:26
+@LastEditTime: 2020-05-15 17:43:13
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -42,7 +42,7 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     pet_recommended = cv.sum(x, axis=0, keepdims=True)
     pet_non_recommended = (np.ones((1, number_of_pet)) - pet_recommended)
     pet_available_ini = np.where(
-        ((pet['state'] == 0) & (pet['soc'] > 1.5)), 1, 0).reshape(1, number_of_pet)
+        ((pet['state'] == 0) & (pet['soc'] > 0.15)), 1, 0).reshape(1, number_of_pet)
     pet_available = cv.multiply(pet_available_ini, pet_non_recommended)
     # pet_pick_up = cv.multiply(pet_non_recommended, pet_pick_up_ini)
     pet_available_region = pet_region_matrix @ pet_available.T
@@ -55,9 +55,9 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     # section: profit
     section_profit = cv.sum(cv.multiply(
         cdq_arrival_rate, per_service_fee) - pcs_cost)
-    objects = section_cdq - V * section_profit
-    # objects = (section_plq + section_delay_aware +
-    #            section_cdq) - V * section_profit
+    # objects = 0.01 * section_cdq - V * section_profit
+    objects = (section_plq + section_delay_aware +
+               section_cdq) - V * section_profit
     constraints_2_right = np.full((number_of_pet, 1), 1)
     state_test = np.where((pet_state == 0), 1, 0)
     # SOC
@@ -68,8 +68,8 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     constraints_5_right = np.full((1, number_of_pet), 1)
     constraints_6_right = np.full((number_of_pet, 1), 1)
     constraints_7_right = np.full((number_of_pet, 1), 1)
-    soc_range_test = np.where((pet_soc > 1), 1, 0)
-    soc_1 = np.where((pet_soc > 9), 1, 0)
+    soc_range_test = np.where((pet_soc > 0.1), 1, 0)
+    soc_1 = np.where((pet_soc > 0.9), 1, 0)
     constraints = [state_test + pet_non_recommended.T >= constraints_2_right,
                    cv.multiply(soc_test, x) == constraints_4_right, pet_recommended <= constraints_5_right, soc_1 + pet_recommended.T <= constraints_6_right, soc_range_test + pet_recommended.T >= constraints_7_right]
     problem = cv.Problem(cv.Minimize(objects), constraints)

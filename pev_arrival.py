@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-12 18:25:32
-@LastEditTime: 2020-05-12 18:31:15
+@LastEditTime: 2020-05-15 17:34:34
 @LastEditors: Ye Han
 @Description: 
 @Copyright (c) 2020 - Ye Han
@@ -30,6 +30,6 @@ def pev_arrival(t, number_of_pcs):
                                  4, 4, 4, 3, 2, 1, 3, 4, 1, 3, 3, 2, 4, 1, 2, 1, 0, 3, 1, 4, 1, 0, 2, 3, 4, 1, 3, 0, 3, 0, 4, 2, 1, 1, 1, 3],
                                 [0, 3, 3, 4, 4, 0, 2, 3, 3, 3, 0, 3, 4, 4, 3, 3, 3, 3, 1, 3, 3, 2, 0, 4, 2, 3, 3, 3, 3, 1, 3, 4, 3, 4, 4, 2,
                                  3, 4, 3, 0, 1, 1, 4, 3, 2, 1, 2, 2, 1, 0, 2, 3, 4, 0, 3, 2, 1, 1, 4, 1, 0, 4, 0, 3, 0, 0, 2, 4, 1, 0, 2, 2]])
-    pev_arrival_rate = pev_arrival_num * 5
+    pev_arrival_rate = pev_arrival_num * 0.5
     pev_arrival_rate_slot = pev_arrival_rate[:, t].reshape(number_of_pcs, 1)
     return(pev_arrival_rate_slot)

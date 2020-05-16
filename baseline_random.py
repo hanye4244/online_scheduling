@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-09 18:08:00
-@LastEditTime: 2020-05-10 11:12:44
+@LastEditTime: 2020-05-15 17:01:34
 @LastEditors: Ye Han
 @Description: The PETs will choose the nearest PCSs when they need to charge.
 @Copyright (c) 2020 - Ye Han
@@ -47,13 +47,13 @@ number_of_pet = 15
 # Initialize pcs.
 pcs_lat = np.array([[39.915], [39.945], [39.975],
                     [39.915], [39.945], [39.975]])
-pcs_lon = pet_choose[116.325], [116.375], [116.325],
+pcs_lon = pet_choose([116.325], [116.375], [116.325],
                     [116.375], [116.325], [116.375]])
-pcs_region=region_id.region_id(pcs_lat, pcs_lon)
+pcs_region= region_id.region_id(pcs_lat, pcs_lon)
 # PCS service rate.
-number_of_plug=1
-charging_rate_of_each=15
-cdq_service_rate=np.full(
+number_of_plug= 1
+charging_rate_of_each= 15
+cdq_service_rate = np.full(
     (number_of_pcs, 1), (number_of_plug * charging_rate_of_each))
 # PET battery characters.
 pet_battery_capacity=np.full((1, number_of_pet), 100)
@@ -139,66 +139,66 @@ for V in [2]:
             lambda x: pick_up_probability[x], pet_region))).reshape(number_of_pet, 1)
         waiting_time = pcs_waiting_time.pcs_waiting_time(
             cdq_service_rate, block_cdq)
-        shape_waiting_time = np.tile(waiting_time, (1, number_of_pet))
-        shape_soc = np.tile(pet_soc.reshape(
+        shape_waiting_time=np.tile(waiting_time, (1, number_of_pet))
+        shape_soc=np.tile(pet_soc.reshape(
             1, number_of_pet), (number_of_pcs, 1))
-        pet_power_consumption = shape_power_consumption*manhattan_pcs_pet
-        pet_remaining_power = shape_soc - pet_power_consumption
-        pet_power_demand = shape_capacity - pet_remaining_power
-        charging_time = pet_power_demand / 15
-        number_pev_arrival = np.random.randint(1, 2, size=[number_of_pcs, 1])
-        pev_arrival_rate = number_pev_arrival * 20
-        utility_function = pet_utility_function.pet_utility_function(number_of_region, number_of_pet, number_of_pcs, pet_average_revenue, pcs_region,
+        pet_power_consumption=shape_power_consumption*manhattan_pcs_pet
+        pet_remaining_power=shape_soc - pet_power_consumption
+        pet_power_demand=shape_capacity - pet_remaining_power
+        charging_time=pet_power_demand / 15
+        number_pev_arrival=np.random.randint(1, 2, size = [number_of_pcs, 1])
+        pev_arrival_rate=number_pev_arrival * 20
+        utility_function=pet_utility_function.pet_utility_function(number_of_region, number_of_pet, number_of_pcs, pet_average_revenue, pcs_region,
                                                                      pet_region, pet_pick_up_probability, pick_up_probability, pet_power_demand, electricity_price, shape_waiting_time, charging_time)
-        pet_put_down = pet_trigger_put_down.pet_trigger_put_down(
+        pet_put_down=pet_trigger_put_down.pet_trigger_put_down(
             pet_state, number_of_pet, pet_soc)
-        pet_state = pet_trigger_state_put_down.pet_trigger_state_put_down(
+        pet_state=pet_trigger_state_put_down.pet_trigger_state_put_down(
             pet_state, pet_put_down, number_of_pet)
-        pet_completed = pet_trigger_completed.pet_trigger_completed(
+        pet_completed=pet_trigger_completed.pet_trigger_completed(
             pet_soc, pet_state, number_of_pet)
-        plq_arrival_rate = passenger_demand.passenger_demand(
+        plq_arrival_rate=passenger_demand.passenger_demand(
             number_of_region, t)
-        delay_aware_arrival_rate = np.full(
+        delay_aware_arrival_rate=np.full(
             (number_of_region, 1), worst_case_delay_guarantee)
         # tag:
-        action = np.zeros((number_of_pcs, number_of_pet))
-        action, pet_recommended = nearest_pcs_choose.nearest_pcs_choose(
+        action=np.zeros((number_of_pcs, number_of_pet))
+        action, pet_recommended=nearest_pcs_choose.nearest_pcs_choose(
             pet_soc, manhattan_pcs_pet, number_of_pet, action)
-        optimization = objective_function.objective_function(action, block_cdq, block_plq, block_delay_aware, V, pet_state, number_of_pcs, number_of_pet, pet_lat, pet_lon, pet_region, pet_soc,
+        optimization=objective_function.objective_function(action, block_cdq, block_plq, block_delay_aware, V, pet_state, number_of_pcs, number_of_pet, pet_lat, pet_lon, pet_region, pet_soc,
                                                              number_of_region, per_service_fee, cdq_service_rate, plq_arrival_rate, delay_aware_arrival_rate, pet_pick_up_probability, shape_capacity, pet_power_demand, pev_arrival_rate, pcs_cost)
-        pet_recommended = pet_trigger_recommended.pet_trigger_recommended(
+        pet_recommended=pet_trigger_recommended.pet_trigger_recommended(
             number_of_pet, action)
-        pet_pick_up = pet_trigger_pick_up.pet_trigger_pick_up(
+        pet_pick_up=pet_trigger_pick_up.pet_trigger_pick_up(
             pet_state, pet_lat, pet_lon, pet_recommended, number_of_region, number_of_pet, pet_region, pet_soc, pet_pick_up_probability)
-        pet_region_matrix = np.zeros((number_of_region, number_of_pet))
+        pet_region_matrix=np.zeros((number_of_region, number_of_pet))
         for i in range(number_of_pet):
             for j in range(number_of_region):
                 if pet_region[i] == j:
-                    pet_region_matrix[j, i] = 1
+                    pet_region_matrix[j, i]=1
                 pass
             pass
         pass
-        pet_pick_up_region = np.dot(pet_region_matrix, pet_pick_up)
-        cdq_arrival_rate = pcs_arrival.pcs_arrival(
+        pet_pick_up_region=np.dot(pet_region_matrix, pet_pick_up)
+        cdq_arrival_rate=pcs_arrival.pcs_arrival(
             action, pet_power_demand, number_of_pcs, number_of_pet, pev_arrival_rate)
-        plq_service_rate = pet_pick_up_region
-        delay_aware_service_rate = plq_service_rate
-        service_fee = pcs_service_fee.pcs_service_fee(
+        plq_service_rate=pet_pick_up_region
+        delay_aware_service_rate=plq_service_rate
+        service_fee=pcs_service_fee.pcs_service_fee(
             cdq_arrival_rate, per_service_fee)
-        profit = pcs_profit.pcs_profit(
+        profit=pcs_profit.pcs_profit(
             service_fee, pcs_cost)
     # tag: Update.
-        pet_state = pet_trigger_state.pet_trigger_state(
+        pet_state=pet_trigger_state.pet_trigger_state(
             pet_state, pet_recommended, pet_pick_up, pet_completed, number_of_pet)
-        pet_soc = pet_soc_time_slot.pet_soc_time_slot(
+        pet_soc=pet_soc_time_slot.pet_soc_time_slot(
             pet_state, pet_soc, number_of_pet, block_cdq, action)
-        pet_lat, pet_lon = pet_location_time_slot.pet_location_time_slot(
+        pet_lat, pet_lon=pet_location_time_slot.pet_location_time_slot(
             pet_state, pet_lat, pet_lon, number_of_pet, action, pcs_lat, pcs_lon, pet_recommended)
-        block_cdq = queue_cdq.queue_cdq(
+        block_cdq=queue_cdq.queue_cdq(
             block_cdq, cdq_arrival_rate, number_of_pcs, cdq_service_rate)
-        block_plq = queue_plq.queue_plq(
+        block_plq=queue_plq.queue_plq(
             block_plq, plq_arrival_rate, plq_service_rate, number_of_region)
-        block_delay_aware = queue_delay_aware.queue_delay_aware(
+        block_delay_aware=queue_delay_aware.queue_delay_aware(
             block_delay_aware, worst_case_delay_guarantee, delay_aware_service_rate, number_of_region, block_plq)
         # tag: time slot print.
         # print('action', action)
