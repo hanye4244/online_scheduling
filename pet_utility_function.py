@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-20 08:41:11
-@LastEditTime: 2020-05-14 10:43:20
+@LastEditTime: 2020-05-26 12:10:22
 @LastEditors: Ye Han
 @Description: The cost of PET
 @FilePath: \Online_Scheduling\pet_utility_function.py
@@ -15,17 +15,17 @@ import numpy as np
 import region_revenue_gap
 
 
-def pet_utility_function(number_of_region, number_of_pet, number_of_pcs, pet_average_revenue, pcs_region, pet_region, pet_pick_up_probability, pick_up_probability, pet_power_demand, electricity_price, shape_waiting_time, charging_time):
+def pet_utility_function(number_of_region, number_of_pet, number_of_pcs, pet_average_revenue, pcs_region, pet_region, pet_pick_up_probability, pick_up_probability, pet_power_demand, electricity_price, shape_waiting_time, charging_time, block_plq):
     # Distance power consumption-->price.
     pet_charging_cost = pet_power_demand * electricity_price
     # Waiting time revenue.Charging time revenue.
     pet_average_revenue_cost = (
-        shape_waiting_time + charging_time) * pet_average_revenue
+        shape_waiting_time + charging_time)
     # The revenues gap.
     revenue_gap = region_revenue_gap.region_revenue_gap(
-        number_of_region, number_of_pet, number_of_pcs, pet_average_revenue, pcs_region, pet_region, pet_pick_up_probability, pick_up_probability)
+        number_of_region, number_of_pet, number_of_pcs, pet_average_revenue, pcs_region, pet_region, pet_pick_up_probability, pick_up_probability, block_plq)
     utility = pet_charging_cost + pet_average_revenue_cost + revenue_gap
-    return utility
+    return utility, pet_charging_cost, pet_average_revenue_cost, revenue_gap
 
 
 if __name__ == '__main__':

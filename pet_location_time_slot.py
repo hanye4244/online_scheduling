@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-19 11:58:49
-@LastEditTime: 2020-04-28 16:22:38
+@LastEditTime: 2020-05-25 11:34:17
 @LastEditors: Ye Han
 @Description:
 @FilePath: \Online_Scheduling\pet_location_time_slot.py
@@ -35,11 +35,11 @@ def pet_location_time_slot(pet_state, pet_lat, pet_lon, number_of_pet, action, p
     pet['charge_lon'] = charging_lon(action, pcs_lon, number_of_pet)
     pet['pet_trigger_recommended'] = pet_trigger_recommended
     pet['lat'] = pet.apply(lambda x: ((40 - 39.9) * np.random.random() + 39.9)
-                           if (x['state'] != 2) else x['lat'], axis=1)
+                           if ((x['pet_trigger_recommended'] != 1) & (x['state'] != 2)) else x['lat'], axis=1)
     pet['lon'] = pet.apply(lambda x: ((116.4 - 116.3) * np.random.random() + 116.3)
-                           if (x['state'] != 2) else x['lon'], axis=1)
-    pet['lat'] = pet.apply(lambda x: x['charge_lat'] if (
-        x['pet_trigger_recommended'] == 1) else x['lat'], axis=1)
+                           if ((x['pet_trigger_recommended'] != 1) & (x['state'] != 2)) else x['lon'], axis=1)
+    pet['lat'] = pet.apply(lambda x: x['charge_lat'] if
+                           (x['pet_trigger_recommended'] == 1) else x['lat'], axis=1)
     pet['lon'] = pet.apply(lambda x: x['charge_lon'] if (
         x['pet_trigger_recommended'] == 1) else x['lon'], axis=1)
     return pet['lat'].values.reshape(number_of_pet, 1), pet['lon'].values.reshape(number_of_pet, 1)

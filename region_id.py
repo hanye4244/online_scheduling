@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-14 15:58:50
-@LastEditTime: 2020-05-04 18:06:29
+@LastEditTime: 2020-05-26 17:14:35
 @LastEditors: Ye Han
 @Description: This function returns the region IDs of the given locations.
 @FilePath: \Online_Scheduling\region_id.py
@@ -34,11 +34,9 @@ def region_id(lat, lon):
     lon_label = [1, 2]
     region_location['lon_cut'] = pd.cut(
         region_location['lon'], bins=bins_lon, labels=lon_label, include_lowest=True)
-
     region_location['id'] = region_location.apply(
         lambda x: calculate_region_id(x['lon_cut'], x['lat_cut']), axis=1)
     region_location['id'] = region_location['id']
-    # print('region_id', region_location['id'].values)
     return region_location['id'].values
     pass
 

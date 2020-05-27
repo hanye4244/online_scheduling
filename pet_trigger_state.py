@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-13 17:09:01
-@LastEditTime: 2020-05-08 10:05:20
+@LastEditTime: 2020-05-25 14:49:48
 @LastEditors: Ye Han
 @Description: According to the triggers, give the states of PETs(charging, loaded, driving).
 @FilePath: \Online_Scheduling\pet_trigger_state.py

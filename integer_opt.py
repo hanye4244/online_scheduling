@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 10:05:34
-@LastEditTime: 2020-05-15 17:43:13
+@LastEditTime: 2020-05-26 11:00:20
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -55,7 +55,7 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     # section: profit
     section_profit = cv.sum(cv.multiply(
         cdq_arrival_rate, per_service_fee) - pcs_cost)
-    # objects = 0.01 * section_cdq - V * section_profit
+    # objects = section_cdq - V * section_profit
     objects = (section_plq + section_delay_aware +
                section_cdq) - V * section_profit
     constraints_2_right = np.full((number_of_pet, 1), 1)
@@ -69,9 +69,11 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     constraints_6_right = np.full((number_of_pet, 1), 1)
     constraints_7_right = np.full((number_of_pet, 1), 1)
     soc_range_test = np.where((pet_soc > 0.1), 1, 0)
+    soc_state_test = np.where((pet_state == 2), 1, 0)
     soc_1 = np.where((pet_soc > 0.9), 1, 0)
     constraints = [state_test + pet_non_recommended.T >= constraints_2_right,
-                   cv.multiply(soc_test, x) == constraints_4_right, pet_recommended <= constraints_5_right, soc_1 + pet_recommended.T <= constraints_6_right, soc_range_test + pet_recommended.T >= constraints_7_right]
+                   cv.multiply(soc_test, x) == constraints_4_right, pet_recommended <= constraints_5_right, soc_1 + pet_recommended.T <= constraints_6_right, soc_range_test + soc_state_test + pet_recommended.T >= constraints_7_right]
+    # constraints = [cv.multiply(soc_test, x) == constraints_4_right]
     problem = cv.Problem(cv.Minimize(objects), constraints)
     problem.solve(solver=cv.CPLEX)
     return x.value, pet_pick_up_region.value, section_plq.value, section_delay_aware.value, section_cdq.value, section_profit.value, pet_available_region.value
