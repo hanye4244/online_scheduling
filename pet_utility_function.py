@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-20 08:41:11
-@LastEditTime: 2020-05-26 12:10:22
+@LastEditTime: 2020-06-02 15:31:20
 @LastEditors: Ye Han
 @Description: The cost of PET
 @FilePath: \Online_Scheduling\pet_utility_function.py
@@ -22,10 +22,10 @@ def pet_utility_function(number_of_region, number_of_pet, number_of_pcs, pet_ave
     pet_average_revenue_cost = (
         shape_waiting_time + charging_time)
     # The revenues gap.
-    revenue_gap = region_revenue_gap.region_revenue_gap(
+    revenue_gap, shape_pcs_region_passenger = region_revenue_gap.region_revenue_gap(
         number_of_region, number_of_pet, number_of_pcs, pet_average_revenue, pcs_region, pet_region, pet_pick_up_probability, pick_up_probability, block_plq)
     utility = pet_charging_cost + pet_average_revenue_cost + revenue_gap
-    return utility, pet_charging_cost, pet_average_revenue_cost, revenue_gap
+    return utility, pet_charging_cost, pet_average_revenue_cost, revenue_gap, shape_pcs_region_passenger
 
 
 if __name__ == '__main__':

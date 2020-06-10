@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 10:05:34
-@LastEditTime: 2020-05-26 11:00:20
+@LastEditTime: 2020-06-08 15:31:01
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 
 
-def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_state, pet_lat, pet_lon, number_of_region, pet_region, pet_soc, pet_pick_up_probability, block_plq, plq_arrival_rate, delay_aware_arrival_rate, block_delay_aware, utility_function, pet_remaining_power, V, per_service_fee, pev_arrival_rate, cdq_service_rate, pcs_cost):
+def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_state, pet_lat, pet_lon, number_of_region, pet_region, pet_soc, pet_pick_up_probability, block_plq, plq_arrival_rate, delay_aware_arrival_rate, block_delay_aware, pet_remaining_power, V, per_service_fee, pev_arrival_rate, cdq_service_rate, pcs_cost, max_soc):
     # Variable.
     x = cv.Variable((number_of_pcs, number_of_pet), boolean=True)
     # Objective function
@@ -70,7 +70,7 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     constraints_7_right = np.full((number_of_pet, 1), 1)
     soc_range_test = np.where((pet_soc > 0.1), 1, 0)
     soc_state_test = np.where((pet_state == 2), 1, 0)
-    soc_1 = np.where((pet_soc > 0.9), 1, 0)
+    soc_1 = np.where((pet_soc > max_soc), 1, 0)
     constraints = [state_test + pet_non_recommended.T >= constraints_2_right,
                    cv.multiply(soc_test, x) == constraints_4_right, pet_recommended <= constraints_5_right, soc_1 + pet_recommended.T <= constraints_6_right, soc_range_test + soc_state_test + pet_recommended.T >= constraints_7_right]
     # constraints = [cv.multiply(soc_test, x) == constraints_4_right]

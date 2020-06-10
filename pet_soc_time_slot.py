@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-19 11:01:41
-@LastEditTime: 2020-05-25 14:49:58
+@LastEditTime: 2020-06-03 12:16:48
 @LastEditors: Ye Han
 @Description: 
 @FilePath: \Online_Scheduling\pet_soc_time_slot.py

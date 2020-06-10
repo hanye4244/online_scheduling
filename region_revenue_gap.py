@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-19 15:37:44
-@LastEditTime: 2020-05-26 16:46:06
+@LastEditTime: 2020-06-02 16:23:09
 @LastEditors: Ye Han
 @Description:
 @FilePath: \Online_Scheduling\region_revenue_gap.py
@@ -23,23 +23,9 @@ def region_revenue_gap(number_of_region, number_of_pet, number_of_pcs, pet_avera
         pet_region_passenger, (1, number_of_pcs)).T
     shape_pcs_region_passenger = np.tile(
         pcs_region_passenger, (1, number_of_pet))
-    gap = (-shape_pcs_region_passenger + shape_pet_region_passenger) / \
-        shape_pet_region_passenger
+    gap = (shape_pcs_region_passenger - shape_pet_region_passenger)
     gap_revenue = gap * pet_average_revenue
-    # The revenue of each region.
-    # The region of each PCS.
-    # pcs_pick_up_probability = list(map(
-    #     lambda x: pick_up_probability[x - 1], pcs_region))
-    # pcs_pick_up_probability = np.array(
-    #     pcs_pick_up_probability).reshape(number_of_pcs, 1)
-    # pcs_region_revenue = pcs_pick_up_probability * pet_average_revenue
-    # pet_pick_up_probability = np.array(
-    #     pet_pick_up_probability).reshape(number_of_pet, 1)
-    # pet_region_revenue = pet_pick_up_probability * pet_average_revenue
-    # revenue_gap = -np.tile(pcs_region_revenue, (1, number_of_pet)) + \
-    #     np.tile(pet_region_revenue, (1, number_of_pcs)).T
-    # print(revenue_gap, 'ddd')
-    return gap_revenue
+    return gap_revenue, shape_pcs_region_passenger
 
 
 if __name__ == '__main__':
