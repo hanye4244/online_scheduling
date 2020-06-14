@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 10:05:34
-@LastEditTime: 2020-06-08 15:31:01
+@LastEditTime: 2020-06-10 22:00:59
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -55,6 +55,7 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     # section: profit
     section_profit = cv.sum(cv.multiply(
         cdq_arrival_rate, per_service_fee) - pcs_cost)
+    # objects = - V * section_profit
     # objects = section_cdq - V * section_profit
     objects = (section_plq + section_delay_aware +
                section_cdq) - V * section_profit

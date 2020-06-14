@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-13 12:04:37
-@LastEditTime: 2020-06-09 20:37:14
+@LastEditTime: 2020-06-11 21:04:35
 @LastEditors: Ye Han
 @Description:
 @FilePath: \Online_Scheduling\main.py
@@ -88,7 +88,7 @@ section_plq_mean_list = []
 pet_utility_function_mean_list = []
 ave_profit_mean_list = []
 # Tag: Variable parameters.
-max_soc = 0.15
+max_soc = 0.25
 worst_case_delay_guarantee = 3
 passenger_demand_max = 4
 V = 300
@@ -221,11 +221,15 @@ for V in V_list:
         ave_profit_list.append(profit.sum() / charging_num)
     pass
     # tag: Parameter print.
+    # print(block_plq_list, 'block_plq_list')
+    print('profit_list', profit_list)
+    # print('ave_profit_mean_list', ave_profit_list)
     profit_mean_list.append(np.mean(profit_list))
     block_cdq_mean_list.append(np.mean(block_cdq_list))
     block_plq_mean_list.append(np.mean(block_plq_list))
     ave_profit_mean_list.append(np.mean(ave_profit_list))
 # Tag: Result print.
-print('profit_mean_list', profit_mean_list)
-print('ave_profit_mean_list', ave_profit_mean_list)
-print('-'*100)
+# print('profit_mean_list', profit_mean_list)
+# print('block_plq_mean_list', block_plq_mean_list)
+# print('ave_profit_mean_list', ave_profit_mean_list)
+# print('-'*100)
