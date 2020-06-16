@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 10:05:34
-@LastEditTime: 2020-06-10 22:00:59
+@LastEditTime: 2020-06-14 15:58:13
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -77,7 +77,7 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     # constraints = [cv.multiply(soc_test, x) == constraints_4_right]
     problem = cv.Problem(cv.Minimize(objects), constraints)
     problem.solve(solver=cv.CPLEX)
-    return x.value, pet_pick_up_region.value, section_plq.value, section_delay_aware.value, section_cdq.value, section_profit.value, pet_available_region.value
+    return x.value, pet_pick_up_region.value
 
 
 if __name__ == '__main__':

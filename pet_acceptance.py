@@ -2,13 +2,15 @@
 '''
 @Author: Ye Han
 @Date: 2020-06-02 12:28:50
-@LastEditTime: 2020-06-11 11:49:51
+@LastEditTime: 2020-06-15 15:52:24
 @LastEditors: Ye Han
 @Description: 
 @Copyright (c) 2020 - Ye Han
 All rights reserved.
 '''
 import numpy as np
+
+import region_revenue_gap
 
 
 def fun(x):
@@ -24,30 +26,48 @@ def fun_soc(x, y):
         return y
 
 
-def pet_acceptance(manhattan_pcs_pet, pet_soc, block_plq, action, number_of_pet, revenue_gap, number_of_pcs):
+def pet_acceptance(manhattan_pcs_pet, pet_soc, block_plq, action, number_of_pet, revenue_gap, number_of_pcs, block_cdq):
     pet_recommended = action.sum(axis=0).reshape(number_of_pet, 1)
+    # 影响因素1：推荐的距离远近程度
     manhattan_pcs_pet = np.sum(
         (manhattan_pcs_pet * action), axis=0).reshape(number_of_pet, 1)
     if ((np.max(manhattan_pcs_pet) - np.min(manhattan_pcs_pet)) != 0):
         manhattan_pcs_pet = (manhattan_pcs_pet -
                              np.min(manhattan_pcs_pet)) / (np.max(manhattan_pcs_pet) - np.min(manhattan_pcs_pet))
+    # 影响因素2：收入的差距
     pet_revenue = np.sum((revenue_gap * action),
                          axis=0).reshape(number_of_pet, 1)
     if ((np.max(pet_revenue) - np.min(pet_revenue)) != 0):
         pet_revenue = (pet_revenue -
                        np.min(pet_revenue)) / (np.max(pet_revenue) - np.min(pet_revenue))
+    # 影响因素3：当前电量情况
     pet_soc_test = pet_soc * pet_recommended
     if ((np.max(pet_soc_test) - np.min(pet_soc_test)) != 0):
         pet_soc_test = (pet_soc_test -
                         np.min(pet_soc_test)) / (np.max(pet_soc_test) - np.min(pet_soc_test))
-    acceptance = - pet_soc_test - manhattan_pcs_pet + pet_revenue
-    if ((np.max(acceptance) - np.min(acceptance)) != 0):
-        acceptance = (acceptance -
-                      np.min(acceptance)) / (np.max(acceptance) - np.min(acceptance))
-    acceptance = acceptance * pet_recommended
-    test = np.array(list(map(fun, acceptance))) * pet_recommended.flatten()
-    test = np.array(list(map(fun_soc, pet_soc, test)))
-    reject_index = np.nonzero(test)[0]
-    for i in reject_index:
-        action[:, i] = np.zeros(number_of_pcs)
-    return action
+    # 影响因素4：目标充电站的队长
+    shape_cdq = -np.sum(np.tile(block_cdq, (1, number_of_pet))
+                        * action, axis=0).reshape(number_of_pet, 1)
+    cdq_test = np.zeros((number_of_pet, 1))
+    if ((np.max(shape_cdq) - np.min(shape_cdq)) != 0):
+        cdq_test = (shape_cdq -
+                    np.min(shape_cdq)) / (np.max(shape_cdq) - np.min(shape_cdq))
+    # else:
+    # # 四个因素进行平均
+    # # acceptance = - pet_soc_test - manhattan_pcs_pet + pet_revenue - shape_cdq
+    # acceptance = shape_cdq
+    # if ((np.max(acceptance) - np.min(acceptance)) != 0):
+    #     acceptance = (acceptance -
+    #                   np.min(acceptance)) / (np.max(acceptance) - np.min(acceptance))
+    # acceptance = acceptance * pet_recommended
+    average_acceptance = 0
+    # if (pet_recommended.sum() != 0):
+    #     average_acceptance = acceptance.sum() / pet_recommended.sum()
+    # test = np.array(list(map(fun, acceptance))) * pet_recommended.flatten()
+    # test = np.array(list(map(fun_soc, pet_soc, test)))
+    # reject_index = np.nonzero(test)[0]
+    # for i in reject_index:
+    #     action[:, i] = np.zeros(number_of_pcs)
+    # return action, average_acceptance
+    print(shape_cdq, cdq_test)
+    return action, average_acceptance
