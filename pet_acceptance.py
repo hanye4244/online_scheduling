@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-06-02 12:28:50
-@LastEditTime: 2020-06-17 12:08:21
+@LastEditTime: 2020-06-17 21:02:47
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -25,8 +25,8 @@ def pet_acceptance(t, manhattan_pcs_pet, pet_soc, revenue_gap, number_of_pcs, sh
     # 4. queue
     sort_waiting_time = (np.argsort(-shape_waiting_time, axis=0)+1) * 0.1
     # The acceptance rates are the average of the four percentages.
-    acceptance = (soc_rate + sort_distance +
-                  sort_revenue_gap + sort_waiting_time)/4
+    acceptance = soc_rate * (sort_distance +
+                             sort_revenue_gap + sort_waiting_time)/3
     #   soc < 0.15
     soc_low = np.where(pet_soc <= 0.15, 1, 0)
     accepted_soc_low = np.nonzero(soc_low)[0]
