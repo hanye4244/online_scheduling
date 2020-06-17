@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 14:59:51
-@LastEditTime: 2020-06-15 15:49:28
+@LastEditTime: 2020-06-17 14:50:51
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -78,26 +78,25 @@ profit_mean_list = []
 block_cdq_mean_list = []
 block_plq_mean_list = []
 block_delay_aware_mean_list = []
-average_acceptance_mean_list = []
 # Tag: Variable parameters.
 max_soc = 0.9
 # max_soc_list = [0.15, 0.3, 0.45, 0.6, 0.75, 0.9]
 passenger_demand_max = 4
 # passenger_demand_max_list = [4, 3, 2, 1, 0, -1, -2]
 # passenger_demand_max_list = [4]
-# V = 300
+V = 300
 # V_list = [1]
-V_list = [1, 10, 100, 300]
-# worst_case_delay_guarantee_list = [3]
-worst_case_delay_guarantee = 3
+# V_list = [10, 20, 30, 40, 50, 80, 100, 200, 300, 400]
+worst_case_delay_guarantee_list = [
+    1, 5, 10, 20, 30, 40, 50, 100, 200, 500, 1000, 1500, 2000]
+# worst_case_delay_guarantee = 3
 # print('worst_case_delay_guarantee', worst_case_delay_guarantee)
-for V in V_list:
+for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
     # Initialize pet.
     profit_list = []
     block_cdq_list = []
     block_plq_list = []
     block_delay_aware_list = []
-    average_acceptance_list = []
     pet_lat = np.array([[39.96253373], [39.91457459], [39.92588301], [39.94986468], [39.9264644], [39.92094834], [39.90860704], [39.90056609], [39.98933747], [39.95777496], [39.93228032], [39.94989055], [39.99973724], [39.90173232], [39.92445588], [39.9616257], [39.94763049], [39.97825631], [39.99229355], [39.91681799], [39.92534945], [39.93672401], [39.92826405], [39.97009977], [39.94988704], [
         39.91694974], [39.93304921], [39.99114325], [39.94262374], [39.99083236], [39.90737595], [39.90142823], [39.91180923], [39.92800281], [39.99798076], [39.93303175], [39.92250838], [39.98032591], [39.99064253], [39.91587499], [39.9575109], [39.97697965], [39.96476319], [39.90019632], [39.91797975], [39.94547393], [39.96540044], [39.97884827], [39.90734119], [39.95631456]])
     pet_lon = np.array([[116.36472475], [116.3882789], [116.32234297], [116.38212617], [116.31774475], [116.30214439], [116.35531708], [116.37685496], [116.39610188], [116.30930473], [116.30828321], [116.39485067], [116.37321686], [116.37615293], [116.35095054], [116.3919535], [116.39262153], [116.30616914], [116.36412417], [116.39627141], [116.34724162], [116.35656495], [116.34527461], [116.3708312], [
@@ -151,14 +150,14 @@ for V in V_list:
         # 统计需要参与充电过程的车辆的个数
         # recommended_num = np.where(
         #     (pet_soc < max_soc) & (pet_state == 0), 1, 0).sum()
-        action, pet_pick_up_region = integer_opt.integer_opt(
-            number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_state, pet_lat, pet_lon, number_of_region, pet_region, pet_soc, pet_pick_up_probability, block_plq, plq_arrival_rate, delay_aware_arrival_rate, block_delay_aware, pet_remaining_power, V, per_service_fee, pev_arrival_rate, cdq_service_rate, pcs_cost, max_soc)
         # Tag: PET utility functions analysis.
         # 计算区域之间的收入差距
         revenue_gap = region_revenue_gap.region_revenue_gap(
             number_of_region, number_of_pet, number_of_pcs, pet_average_revenue, pcs_region, pet_region, pet_pick_up_probability, pick_up_probability, block_plq)
-        action, average_acceptance = pet_acceptance.pet_acceptance(
-            manhattan_pcs_pet, pet_soc, block_plq, action, number_of_pet, revenue_gap, number_of_pcs, block_cdq)
+        acceptance = pet_acceptance.pet_acceptance(
+            t, manhattan_pcs_pet, pet_soc, revenue_gap, number_of_pcs, shape_waiting_time, number_of_pet)
+        action, pet_pick_up_region = integer_opt.integer_opt(
+            number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_state, pet_lat, pet_lon, number_of_region, pet_region, pet_soc, pet_pick_up_probability, block_plq, plq_arrival_rate, delay_aware_arrival_rate, block_delay_aware, pet_remaining_power, V, per_service_fee, pev_arrival_rate, cdq_service_rate, pcs_cost, max_soc, acceptance)
         pet_recommended = pet_trigger_recommended.pet_trigger_recommended(
             number_of_pet, action)
         pet_pick_up = pet_trigger_pick_up.pet_trigger_pick_up(
@@ -185,27 +184,22 @@ for V in V_list:
         block_delay_aware = queue_delay_aware.queue_delay_aware(
             block_delay_aware, worst_case_delay_guarantee, delay_aware_service_rate, number_of_region, block_plq)
         # tag: time slot append.
-        # block_cdq_list.append(block_cdq.sum())
-        # block_plq_list.append(block_plq.sum())
+        profit_list.append(profit.sum())
+        block_cdq_list.append(block_cdq.sum())
+        block_plq_list.append(block_plq.sum())
         # block_delay_aware_list.append(block_delay_aware.sum())
-        # profit_list.append(profit.sum())
-        # 计算参与推荐的个数以及PEV的个数之和。
-        # charging_num = recommended_num + pev_arrival_num.sum()
-        average_acceptance_list.append(average_acceptance)
     pass
     # tag: Parameter print.
-    print('V', V)
+    print('V =', V)
     print("worst_case_delay_guarantee = ", worst_case_delay_guarantee)
-    print('average_acceptance_list', average_acceptance_list)
-    # profit_mean_list.append(np.mean(profit_list))
-    # block_cdq_mean_list.append(np.mean(block_cdq_list))
-    # block_plq_mean_list.append(np.mean(block_plq_list))
+    print('profit_list =', np.mean(profit_list))
+    profit_mean_list.append(np.mean(profit_list))
+    block_cdq_mean_list.append(np.mean(block_cdq_list))
+    block_plq_mean_list.append(np.mean(block_plq_list))
     # block_delay_aware_mean_list.append(np.mean(block_delay_aware_list))
     # print(block_plq_list, 'block_plq_list')
-    average_acceptance_mean_list.append(np.mean(average_acceptance_list))
 # Tag: Result print.
-# print('profit_mean_list', profit_mean_list)
-# print('block_cdq_mean_list', block_cdq_mean_list)
-# print('block_plq_mean_list', block_plq_mean_list)
-print('average_acceptance_mean_list', average_acceptance_mean_list)
+print('profit_mean_list', profit_mean_list)
+print('block_cdq_mean_list', block_cdq_mean_list)
+print('block_plq_mean_list', block_plq_mean_list)
 print('-'*100)
