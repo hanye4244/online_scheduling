@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 14:59:51
-@LastEditTime: 2020-06-18 12:26:40
+@LastEditTime: 2020-06-18 18:42:24
 @LastEditors: Ye Han
 @Description: The integer programming includes the acceptance rate of PETs.
 @Copyright (c) 2020 - Ye Han
@@ -84,15 +84,15 @@ max_soc = 0.9
 passenger_demand_max = 4
 # passenger_demand_max_list = [4, 3, 2, 1, 0, -1, -2]
 # passenger_demand_max_list = [4]
-# V = 300
-V_list = [1]
+V = 300
+# V_list = [1]
 # V_list = [10, 20, 30, 40, 50, 80, 100, 200, 300, 400]
-# worst_case_delay_guarantee_list = [
-#     1, 5, 10, 20, 30, 40, 50, 100, 200, 500, 1000, 1500, 2000]
-worst_case_delay_guarantee = 3
+worst_case_delay_guarantee_list = [
+    1, 5, 10, 20, 30, 40, 50, 100, 200, 500, 1000, 1500, 2000]
+# worst_case_delay_guarantee = 3
 # print('worst_case_delay_guarantee', worst_case_delay_guarantee)
-for V in V_list:
-    # for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
+# for V in V_list:
+for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
     # Initialize pet.
     profit_list = []
     block_cdq_list = []
