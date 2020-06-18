@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 10:05:34
-@LastEditTime: 2020-06-17 11:23:00
+@LastEditTime: 2020-06-10 08:40:23
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -14,10 +14,9 @@ import numpy as np
 import pandas as pd
 
 
-def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_state, pet_lat, pet_lon, number_of_region, pet_region, pet_soc, pet_pick_up_probability, block_plq, plq_arrival_rate, delay_aware_arrival_rate, block_delay_aware, pet_remaining_power, V, per_service_fee, pev_arrival_rate, cdq_service_rate, pcs_cost, max_soc, acceptance):
+def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_state, pet_lat, pet_lon, number_of_region, pet_region, pet_soc, pet_pick_up_probability, block_plq, plq_arrival_rate, delay_aware_arrival_rate, block_delay_aware, pet_remaining_power, V, per_service_fee, pev_arrival_rate, cdq_service_rate, pcs_cost, charging_test):
     # Variable.
-    y = cv.Variable((number_of_pcs, number_of_pet), boolean=True)
-    x = cv.multiply(acceptance, y)
+    x = cv.Variable((number_of_pcs, number_of_pet), boolean=True)
     # Objective function
     # Section: cdq
     cdq_arrival_rate = cv.sum(cv.multiply(pet_power_demand, x),
@@ -56,7 +55,6 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     # section: profit
     section_profit = cv.sum(cv.multiply(
         cdq_arrival_rate, per_service_fee) - pcs_cost)
-    # objects = - V * section_profit
     # objects = section_cdq - V * section_profit
     objects = (section_plq + section_delay_aware +
                section_cdq) - V * section_profit
@@ -72,13 +70,12 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     constraints_7_right = np.full((number_of_pet, 1), 1)
     soc_range_test = np.where((pet_soc > 0.1), 1, 0)
     soc_state_test = np.where((pet_state == 2), 1, 0)
-    soc_1 = np.where((pet_soc > max_soc), 1, 0)
     constraints = [state_test + pet_non_recommended.T >= constraints_2_right,
-                   cv.multiply(soc_test, x) == constraints_4_right, pet_recommended <= constraints_5_right, soc_1 + pet_recommended.T <= constraints_6_right, soc_range_test + soc_state_test + pet_recommended.T >= constraints_7_right]
+                   cv.multiply(soc_test, x) == constraints_4_right, pet_recommended <= constraints_5_right, soc_range_test + soc_state_test + pet_recommended.T >= constraints_7_right, charging_test == pet_recommended]
     # constraints = [cv.multiply(soc_test, x) == constraints_4_right]
     problem = cv.Problem(cv.Minimize(objects), constraints)
     problem.solve(solver=cv.CPLEX)
-    return x.value, pet_pick_up_region.value
+    return x.value, pet_pick_up_region.value, section_plq.value, section_delay_aware.value, section_cdq.value, section_profit.value, pet_available_region.value
 
 
 if __name__ == '__main__':

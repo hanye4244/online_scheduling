@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-19 15:37:44
-@LastEditTime: 2020-06-14 15:54:57
+@LastEditTime: 2020-06-02 16:23:09
 @LastEditors: Ye Han
 @Description:
 @FilePath: \Online_Scheduling\region_revenue_gap.py
@@ -25,7 +25,7 @@ def region_revenue_gap(number_of_region, number_of_pet, number_of_pcs, pet_avera
         pcs_region_passenger, (1, number_of_pet))
     gap = (shape_pcs_region_passenger - shape_pet_region_passenger)
     gap_revenue = gap * pet_average_revenue
-    return gap_revenue
+    return gap_revenue, shape_pcs_region_passenger
 
 
 if __name__ == '__main__':
