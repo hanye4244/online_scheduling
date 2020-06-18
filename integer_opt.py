@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 10:05:34
-@LastEditTime: 2020-06-17 11:23:00
+@LastEditTime: 2020-06-18 11:51:54
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -14,10 +14,9 @@ import numpy as np
 import pandas as pd
 
 
-def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_state, pet_lat, pet_lon, number_of_region, pet_region, pet_soc, pet_pick_up_probability, block_plq, plq_arrival_rate, delay_aware_arrival_rate, block_delay_aware, pet_remaining_power, V, per_service_fee, pev_arrival_rate, cdq_service_rate, pcs_cost, max_soc, acceptance):
+def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_state, pet_lat, pet_lon, number_of_region, pet_region, pet_soc, pet_pick_up_probability, block_plq, plq_arrival_rate, delay_aware_arrival_rate, block_delay_aware, pet_remaining_power, V, per_service_fee, pev_arrival_rate, cdq_service_rate, pcs_cost, max_soc):
     # Variable.
-    y = cv.Variable((number_of_pcs, number_of_pet), boolean=True)
-    x = cv.multiply(acceptance, y)
+    x = cv.Variable((number_of_pcs, number_of_pet), boolean=True)
     # Objective function
     # Section: cdq
     cdq_arrival_rate = cv.sum(cv.multiply(pet_power_demand, x),

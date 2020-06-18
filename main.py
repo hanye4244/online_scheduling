@@ -2,9 +2,9 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 14:59:51
-@LastEditTime: 2020-06-17 14:50:51
+@LastEditTime: 2020-06-18 12:26:40
 @LastEditors: Ye Han
-@Description:
+@Description: The integer programming includes the acceptance rate of PETs.
 @Copyright (c) 2020 - Ye Han
 All rights reserved.
 '''
@@ -84,14 +84,15 @@ max_soc = 0.9
 passenger_demand_max = 4
 # passenger_demand_max_list = [4, 3, 2, 1, 0, -1, -2]
 # passenger_demand_max_list = [4]
-V = 300
-# V_list = [1]
+# V = 300
+V_list = [1]
 # V_list = [10, 20, 30, 40, 50, 80, 100, 200, 300, 400]
-worst_case_delay_guarantee_list = [
-    1, 5, 10, 20, 30, 40, 50, 100, 200, 500, 1000, 1500, 2000]
-# worst_case_delay_guarantee = 3
+# worst_case_delay_guarantee_list = [
+#     1, 5, 10, 20, 30, 40, 50, 100, 200, 500, 1000, 1500, 2000]
+worst_case_delay_guarantee = 3
 # print('worst_case_delay_guarantee', worst_case_delay_guarantee)
-for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
+for V in V_list:
+    # for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
     # Initialize pet.
     profit_list = []
     block_cdq_list = []
@@ -154,10 +155,11 @@ for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
         # 计算区域之间的收入差距
         revenue_gap = region_revenue_gap.region_revenue_gap(
             number_of_region, number_of_pet, number_of_pcs, pet_average_revenue, pcs_region, pet_region, pet_pick_up_probability, pick_up_probability, block_plq)
+        action, pet_pick_up_region = integer_opt.integer_opt(
+            number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_state, pet_lat, pet_lon, number_of_region, pet_region, pet_soc, pet_pick_up_probability, block_plq, plq_arrival_rate, delay_aware_arrival_rate, block_delay_aware, pet_remaining_power, V, per_service_fee, pev_arrival_rate, cdq_service_rate, pcs_cost, max_soc)
         acceptance = pet_acceptance.pet_acceptance(
             t, manhattan_pcs_pet, pet_soc, revenue_gap, number_of_pcs, shape_waiting_time, number_of_pet)
-        action, pet_pick_up_region = integer_opt.integer_opt(
-            number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_state, pet_lat, pet_lon, number_of_region, pet_region, pet_soc, pet_pick_up_probability, block_plq, plq_arrival_rate, delay_aware_arrival_rate, block_delay_aware, pet_remaining_power, V, per_service_fee, pev_arrival_rate, cdq_service_rate, pcs_cost, max_soc, acceptance)
+        action = action * acceptance
         pet_recommended = pet_trigger_recommended.pet_trigger_recommended(
             number_of_pet, action)
         pet_pick_up = pet_trigger_pick_up.pet_trigger_pick_up(
