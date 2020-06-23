@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 10:05:34
-@LastEditTime: 2020-06-17 11:23:00
+@LastEditTime: 2020-06-23 17:59:20
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -60,6 +60,7 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     # objects = section_cdq - V * section_profit
     objects = (section_plq + section_delay_aware +
                section_cdq) - V * section_profit
+    # objects = - V * section_profit
     constraints_2_right = np.full((number_of_pet, 1), 1)
     state_test = np.where((pet_state == 0), 1, 0)
     # SOC

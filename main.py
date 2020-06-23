@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 14:59:51
-@LastEditTime: 2020-06-17 14:50:51
+@LastEditTime: 2020-06-23 16:29:07
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -84,14 +84,16 @@ max_soc = 0.9
 passenger_demand_max = 4
 # passenger_demand_max_list = [4, 3, 2, 1, 0, -1, -2]
 # passenger_demand_max_list = [4]
-V = 300
-# V_list = [1]
+# V = 300
+V_list = [300]
 # V_list = [10, 20, 30, 40, 50, 80, 100, 200, 300, 400]
-worst_case_delay_guarantee_list = [
-    1, 5, 10, 20, 30, 40, 50, 100, 200, 500, 1000, 1500, 2000]
-# worst_case_delay_guarantee = 3
+# worst_case_delay_guarantee_list = [
+#     1, 5, 10, 20, 30, 40, 50, 100, 200, 500, 1000, 1500, 2000]
+worst_case_delay_guarantee = 1
 # print('worst_case_delay_guarantee', worst_case_delay_guarantee)
-for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
+for V in V_list:
+    # for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
+    # for passenger_demand_max in passenger_demand_max_list:
     # Initialize pet.
     profit_list = []
     block_cdq_list = []
@@ -147,9 +149,6 @@ for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
             number_of_region, t, passenger_demand_max)
         delay_aware_arrival_rate = np.full(
             (number_of_region, 1), worst_case_delay_guarantee)
-        # 统计需要参与充电过程的车辆的个数
-        # recommended_num = np.where(
-        #     (pet_soc < max_soc) & (pet_state == 0), 1, 0).sum()
         # Tag: PET utility functions analysis.
         # 计算区域之间的收入差距
         revenue_gap = region_revenue_gap.region_revenue_gap(
@@ -192,14 +191,16 @@ for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
     # tag: Parameter print.
     print('V =', V)
     print("worst_case_delay_guarantee = ", worst_case_delay_guarantee)
-    print('profit_list =', np.mean(profit_list))
+    print('passenger_demand_max =', passenger_demand_max)
+    # print('profit_list =', np.mean(profit_list))
     profit_mean_list.append(np.mean(profit_list))
     block_cdq_mean_list.append(np.mean(block_cdq_list))
     block_plq_mean_list.append(np.mean(block_plq_list))
     # block_delay_aware_mean_list.append(np.mean(block_delay_aware_list))
     # print(block_plq_list, 'block_plq_list')
 # Tag: Result print.
-print('profit_mean_list', profit_mean_list)
-print('block_cdq_mean_list', block_cdq_mean_list)
-print('block_plq_mean_list', block_plq_mean_list)
+print('profit_mean_list =', profit_mean_list)
+print('block_cdq_mean_list =', block_cdq_mean_list)
+print('block_plq_mean_list =', block_plq_mean_list)
+print('profit_list =', profit_list)
 print('-'*100)
