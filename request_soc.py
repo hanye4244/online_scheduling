@@ -2,26 +2,12 @@
 '''
 @Author: Ye Han
 @Date: 2020-06-16 18:31:04
-@LastEditTime: 2020-06-17 12:16:30
+@LastEditTime: 2020-06-24 10:24:06
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
 All rights reserved.
 '''
-# coding=utf-8
-'''
-@Author: Ye Han
-@Date: 2020-06-16 18:31:04
-@LastEditTime: 2020-06-16 18:31:04
-@LastEditors: Ye Han
-@Description:
-@Copyright (c) 2020 - Ye Han
-All rights reserved.
-'''
-
-
-
-
 import numpy as np
 
 
