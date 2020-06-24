@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 14:59:51
-@LastEditTime: 2020-06-23 18:11:41
+@LastEditTime: 2020-06-23 18:34:13
 @LastEditors: Ye Han
 @Description: The integer programming includes the acceptance rate of PETs.
 @Copyright (c) 2020 - Ye Han
@@ -154,13 +154,13 @@ for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
         #     (pet_soc < max_soc) & (pet_state == 0), 1, 0).sum()
         # Tag: PET utility functions analysis.
         # 计算区域之间的收入差距
-        revenue_gap = region_revenue_gap.region_revenue_gap(
-            number_of_region, number_of_pet, number_of_pcs, pet_average_revenue, pcs_region, pet_region, pet_pick_up_probability, pick_up_probability, block_plq)
+        # revenue_gap = region_revenue_gap.region_revenue_gap(
+        #     number_of_region, number_of_pet, number_of_pcs, pet_average_revenue, pcs_region, pet_region, pet_pick_up_probability, pick_up_probability, block_plq)
         action, pet_pick_up_region = integer_opt.integer_opt(
             number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_state, pet_lat, pet_lon, number_of_region, pet_region, pet_soc, pet_pick_up_probability, block_plq, plq_arrival_rate, delay_aware_arrival_rate, block_delay_aware, pet_remaining_power, V, per_service_fee, pev_arrival_rate, cdq_service_rate, pcs_cost, max_soc)
-        acceptance = pet_acceptance.pet_acceptance(
-            t, manhattan_pcs_pet, pet_soc, revenue_gap, number_of_pcs, shape_waiting_time, number_of_pet)
-        action = action * acceptance
+        # acceptance = pet_acceptance.pet_acceptance(
+        #     t, manhattan_pcs_pet, pet_soc, revenue_gap, number_of_pcs, shape_waiting_time, number_of_pet)
+        # action = action * acceptance
         pet_recommended = pet_trigger_recommended.pet_trigger_recommended(
             number_of_pet, action)
         pet_pick_up = pet_trigger_pick_up.pet_trigger_pick_up(
