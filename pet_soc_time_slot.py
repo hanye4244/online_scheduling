@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-19 11:01:41
-@LastEditTime: 2020-06-03 12:16:48
+@LastEditTime: 2020-06-24 11:18:28
 @LastEditors: Ye Han
 @Description: 
 @FilePath: \Online_Scheduling\pet_soc_time_slot.py
@@ -25,6 +25,8 @@ def pet_soc_time_slot(pet_state, pet_soc, number_of_pet, block_cdq, action):
                            if (x['state'] == 1) else x['soc'], axis=1)
     pet['soc'] = pet.apply(lambda x: (x['soc'] + 0.72/(5.6+x['block_cdq']))
                            if (x['state'] == 2) else x['soc'], axis=1)
+    pet['soc'] = pet.apply(lambda x: 0.99 if (
+        x['soc'] > 0.99) else x['soc'], axis=1)
     # pet['soc'] = pet.apply(lambda x: 50 if (
     #     (x['soc'] < 15) & (x['state'] != 2)) else x['soc'], axis=1)
     # print(pet)
