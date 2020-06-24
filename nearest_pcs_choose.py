@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-10 10:31:30
-@LastEditTime: 2020-06-12 09:00:46
+@LastEditTime: 2020-06-24 11:16:53
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -13,12 +13,11 @@ import numpy as np
 import pandas as pd
 
 
-def nearest_pcs_choose(pet_soc, manhattan_pcs_pet, number_of_pet, action, pet_state, max_soc):
+def nearest_pcs_choose(manhattan_pcs_pet, action, charging_test, number_of_pet):
     # pet_charging_random = np.random.randint(0, 2, size=[number_of_pet, 1])
-    pet_recommended = np.where(
-        ((pet_soc < max_soc) & (pet_state == 0)), 1, 0)
+    pet_recommended = charging_test
     charge_index = np.nonzero(pet_recommended)[0]
     for i in charge_index:
         pcs_chosen = np.argmin(manhattan_pcs_pet[:, i])
         action[pcs_chosen, i] = 1
-    return action, pet_recommended
+    return action

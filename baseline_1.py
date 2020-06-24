@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-13 12:04:37
-@LastEditTime: 2020-06-09 20:37:14
+@LastEditTime: 2020-06-24 11:16:39
 @LastEditors: Ye Han
 @Description:
 @FilePath: \Online_Scheduling\main.py
@@ -17,6 +17,7 @@ All rights reserved.
 import numpy as np
 import pandas as pd
 
+import charging_respond
 import distance
 import integer_opt
 import nearest_pcs_choose
@@ -164,8 +165,13 @@ for V in V_list:
         delay_aware_arrival_rate = np.full(
             (number_of_region, 1), worst_case_delay_guarantee)
         action = np.zeros((number_of_pcs, number_of_pet))
-        action, pet_recommended = nearest_pcs_choose.nearest_pcs_choose(
-            pet_soc, manhattan_pcs_pet, number_of_pet, action, pet_state, max_soc)
+        charging_test = charging_respond.charging_respond(
+            t, pet_soc, number_of_pet, pet_state)
+        action = nearest_pcs_choose.nearest_pcs_choose(
+            manhattan_pcs_pet, action, charging_test, number_of_pet)
+        pet_recommended = pet_trigger_recommended.pet_trigger_recommended(
+            number_of_pet, action)
+        print(action, pet_recommended)
         pet_region_matrix = np.zeros((number_of_region, number_of_pet))
         for i in range(number_of_pet):
             for j in range(number_of_region):
