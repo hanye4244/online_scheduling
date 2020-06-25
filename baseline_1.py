@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-13 12:04:37
-@LastEditTime: 2020-06-24 11:30:55
+@LastEditTime: 2020-06-25 18:45:16
 @LastEditors: Ye Han
 @Description:
 @FilePath: \Online_Scheduling\main.py
@@ -62,7 +62,7 @@ shape_capacity = np.tile(pet_battery_capacity, (number_of_pcs, 1))
 power_consumption = np.full((1, number_of_pet), 0.004)
 shape_power_consumption = np.tile(power_consumption, (number_of_pcs, 1))
 # The service fee.
-per_service_fee = 100
+per_service_fee = 150
 # The revenues of PETs during each time slot.
 pet_average_revenue = 10
 # Kilometer per time slot.
@@ -115,7 +115,8 @@ for V in V_list:
         pet_completed = np.zeros((number_of_pet, 1))
         pet_recommended = np.zeros((number_of_pet, 1))
         electricity_price_slot = electricity_price[t]
-        pcs_cost = np.full((number_of_pcs, 1), electricity_price_slot * 0.1)
+        pcs_cost = np.full((number_of_pcs, 1),
+                           electricity_price_slot * 0.1 * 1000)
         pet_region = region_id.region_id(pet_lat, pet_lon)
         manhattan_pcs_pet = distance.distance_between_pcs_pet(
             pet_lat, pet_lon, pcs_lat, pcs_lon, number_of_pcs, number_of_pet)
