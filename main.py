@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 14:59:51
-@LastEditTime: 2020-06-25 18:34:41
+@LastEditTime: 2020-06-25 20:49:27
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -79,7 +79,7 @@ block_cdq_mean_list = []
 block_plq_mean_list = []
 block_delay_aware_mean_list = []
 # Tag: Variable parameters.
-max_soc = 0.9
+max_soc = 0.99
 # max_soc_list = [0.15, 0.3, 0.45, 0.6, 0.75, 0.9]
 passenger_demand_max = 4
 # passenger_demand_max_list = [4, 3, 2, 1, 0, -1, -2]
@@ -88,7 +88,7 @@ passenger_demand_max = 4
 # V_list = [300]
 # V_list = [1, 10, 20, 30, 40, 50, 80, 100, 200, 300, 400]
 # worst_case_delay_guarantee_list = [1, 400]
-V_list = [1, 2, 10]
+V_list = [200, 300, 400]
 worst_case_delay_guarantee = 1
 # print('worst_case_delay_guarantee', worst_case_delay_guarantee)
 for V in V_list:
