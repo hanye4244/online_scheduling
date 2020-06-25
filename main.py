@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 14:59:51
-@LastEditTime: 2020-06-25 11:11:12
+@LastEditTime: 2020-06-25 18:06:34
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -60,7 +60,7 @@ shape_capacity = np.tile(pet_battery_capacity, (number_of_pcs, 1))
 power_consumption = np.full((1, number_of_pet), 0.004)
 shape_power_consumption = np.tile(power_consumption, (number_of_pcs, 1))
 # The service fee.
-per_service_fee = 100
+per_service_fee = 0.24
 # The revenues of PETs during each time slot.
 pet_average_revenue = 1
 # Kilometer per time slot.
@@ -84,14 +84,15 @@ max_soc = 0.9
 passenger_demand_max = 4
 # passenger_demand_max_list = [4, 3, 2, 1, 0, -1, -2]
 # passenger_demand_max_list = [4]
-V = 300
+# V = 300
 # V_list = [300]
-# V_list = [10, 20, 30, 40, 50, 80, 100, 200, 300, 400]
-worst_case_delay_guarantee_list = [1, 400]
-# worst_case_delay_guarantee = 1
+# V_list = [1, 10, 20, 30, 40, 50, 80, 100, 200, 300, 400]
+# worst_case_delay_guarantee_list = [1, 400]
+V_list = [1, 2]
+worst_case_delay_guarantee = 1
 # print('worst_case_delay_guarantee', worst_case_delay_guarantee)
-# for V in V_list:
-for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
+for V in V_list:
+    # for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
         # for passenger_demand_max in passenger_demand_max_list:
         # Initialize pet.
     profit_list = []
@@ -199,7 +200,7 @@ for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
     # print(block_plq_list, 'block_plq_list')
 # Tag: Result print.
 print('profit_mean_list =', profit_mean_list)
-# print('block_cdq_mean_list =', block_cdq_mean_list)
+print('block_cdq_mean_list =', block_cdq_mean_list)
 print('block_plq_mean_list =', block_plq_mean_list)
 # print('profit_list =', profit_list)
 print('-'*100)
