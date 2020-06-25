@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 14:59:51
-@LastEditTime: 2020-06-24 11:07:41
+@LastEditTime: 2020-06-25 10:41:15
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -83,9 +83,9 @@ section_plq_mean_list = []
 # Tag: Variable parameters.
 passenger_demand_max = 4
 # V = 100
-V_list = [300]
-worst_case_delay_guarantee = 1
-for V in V_list:
+V = 1
+worst_case_delay_guarantee_list = [1, 400]
+for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
     # Initialize pet.
     profit_list = []
     block_cdq_list = []
@@ -182,10 +182,12 @@ for V in V_list:
     block_cdq_mean_list.append(np.mean(block_cdq_list))
     block_plq_mean_list.append(np.mean(block_plq_list))
     block_delay_aware_mean_list.append(np.mean(block_delay_aware_list))
-    print('profit_list', profit_list)
+    print('V =', V)
+    print('worst_case_delay_guarantee =', worst_case_delay_guarantee)
+    # print('profit_list', profit_list)
 # Tag: Result print.
 # print('V', V_list)
 print('profit_mean_list', profit_mean_list)
-print('block_cdq_mean_list', block_cdq_mean_list)
+# print('block_cdq_mean_list', block_cdq_mean_list)
 print('block_plq_mean_list', block_plq_mean_list)
 print('-'*100)
