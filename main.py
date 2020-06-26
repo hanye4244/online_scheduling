@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 14:59:51
-@LastEditTime: 2020-06-25 10:41:15
+@LastEditTime: 2020-06-25 22:18:15
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -60,7 +60,7 @@ shape_capacity = np.tile(pet_battery_capacity, (number_of_pcs, 1))
 power_consumption = np.full((1, number_of_pet), 0.004)
 shape_power_consumption = np.tile(power_consumption, (number_of_pcs, 1))
 # The service fee.
-per_service_fee = 100
+per_service_fee = 150
 # The revenues of PETs during each time slot.
 pet_average_revenue = 1
 # Kilometer per time slot.
@@ -82,10 +82,10 @@ section_cdq_mean_list = []
 section_plq_mean_list = []
 # Tag: Variable parameters.
 passenger_demand_max = 4
-# V = 100
-V = 1
-worst_case_delay_guarantee_list = [1, 400]
-for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
+V_list = [300]
+worst_case_delay_guarantee = 1
+for V in V_list:
+    # for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
     # Initialize pet.
     profit_list = []
     block_cdq_list = []
@@ -113,7 +113,8 @@ for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
         pet_completed = np.zeros((number_of_pet, 1))
         pet_recommended = np.zeros((number_of_pet, 1))
         electricity_price_slot = electricity_price[t]
-        pcs_cost = np.full((number_of_pcs, 1), electricity_price_slot * 0.1)
+        pcs_cost = np.full((number_of_pcs, 1),
+                           electricity_price_slot * 0.1 * 1000)
         pet_region = region_id.region_id(pet_lat, pet_lon)
         manhattan_pcs_pet = distance.distance_between_pcs_pet(
             pet_lat, pet_lon, pcs_lat, pcs_lon, number_of_pcs, number_of_pet)
@@ -188,6 +189,6 @@ for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
 # Tag: Result print.
 # print('V', V_list)
 print('profit_mean_list', profit_mean_list)
-# print('block_cdq_mean_list', block_cdq_mean_list)
+print('block_cdq_mean_list', block_cdq_mean_list)
 print('block_plq_mean_list', block_plq_mean_list)
 print('-'*100)
