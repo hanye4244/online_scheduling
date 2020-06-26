@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 14:59:51
-@LastEditTime: 2020-06-25 12:23:50
+@LastEditTime: 2020-06-26 09:52:48
 @LastEditors: Ye Han
 @Description: The integer programming includes the acceptance rate of PETs.
 @Copyright (c) 2020 - Ye Han
@@ -60,7 +60,7 @@ shape_capacity = np.tile(pet_battery_capacity, (number_of_pcs, 1))
 power_consumption = np.full((1, number_of_pet), 0.004)
 shape_power_consumption = np.tile(power_consumption, (number_of_pcs, 1))
 # The service fee.
-per_service_fee = 100
+per_service_fee = 150
 # The revenues of PETs during each time slot.
 pet_average_revenue = 1
 # Kilometer per time slot.
@@ -79,17 +79,17 @@ block_cdq_mean_list = []
 block_plq_mean_list = []
 block_delay_aware_mean_list = []
 # Tag: Variable parameters.
-max_soc = 0.9
+max_soc = 0.99
 # max_soc_list = [0.15, 0.3, 0.45, 0.6, 0.75, 0.9]
 passenger_demand_max = 4
 # passenger_demand_max_list = [4, 3, 2, 1, 0, -1, -2]
 # passenger_demand_max_list = [4]
-V = 300
+V = 1
 # V_list = [1]
 # V_list = [10, 20, 30, 40, 50, 80, 100, 200, 300, 400]
 # worst_case_delay_guarantee_list = [
 #     1, 5, 10, 20, 30, 40, 50, 100, 200, 500, 1000, 1500, 2000]
-worst_case_delay_guarantee_list = [1, 400]
+worst_case_delay_guarantee_list = [1]
 # worst_case_delay_guarantee = 3
 # print('worst_case_delay_guarantee', worst_case_delay_guarantee)
 # for V in V_list:
@@ -121,7 +121,8 @@ for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
         pet_completed = np.zeros((number_of_pet, 1))
         pet_recommended = np.zeros((number_of_pet, 1))
         electricity_price_slot = electricity_price[t]
-        pcs_cost = np.full((number_of_pcs, 1), electricity_price_slot * 0.1)
+        pcs_cost = np.full((number_of_pcs, 1),
+                           electricity_price_slot * 0.1 * 1000)
         pet_region = region_id.region_id(pet_lat, pet_lon)
         manhattan_pcs_pet = distance.distance_between_pcs_pet(
             pet_lat, pet_lon, pcs_lat, pcs_lon, number_of_pcs, number_of_pet)
@@ -154,13 +155,13 @@ for worst_case_delay_guarantee in worst_case_delay_guarantee_list:
         #     (pet_soc < max_soc) & (pet_state == 0), 1, 0).sum()
         # Tag: PET utility functions analysis.
         # 计算区域之间的收入差距
-        # revenue_gap = region_revenue_gap.region_revenue_gap(
-        #     number_of_region, number_of_pet, number_of_pcs, pet_average_revenue, pcs_region, pet_region, pet_pick_up_probability, pick_up_probability, block_plq)
+        revenue_gap = region_revenue_gap.region_revenue_gap(
+            number_of_region, number_of_pet, number_of_pcs, pet_average_revenue, pcs_region, pet_region, pet_pick_up_probability, pick_up_probability, block_plq)
         action, pet_pick_up_region = integer_opt.integer_opt(
             number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_state, pet_lat, pet_lon, number_of_region, pet_region, pet_soc, pet_pick_up_probability, block_plq, plq_arrival_rate, delay_aware_arrival_rate, block_delay_aware, pet_remaining_power, V, per_service_fee, pev_arrival_rate, cdq_service_rate, pcs_cost, max_soc)
-        # acceptance = pet_acceptance.pet_acceptance(
-        #     t, manhattan_pcs_pet, pet_soc, revenue_gap, number_of_pcs, shape_waiting_time, number_of_pet)
-        # action = action * acceptance
+        acceptance = pet_acceptance.pet_acceptance(
+            t, manhattan_pcs_pet, pet_soc, revenue_gap, number_of_pcs, shape_waiting_time, number_of_pet)
+        action = action * acceptance
         pet_recommended = pet_trigger_recommended.pet_trigger_recommended(
             number_of_pet, action)
         pet_pick_up = pet_trigger_pick_up.pet_trigger_pick_up(
