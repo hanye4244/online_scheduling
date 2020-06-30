@@ -15,8 +15,8 @@ import pandas as pd
 
 
 def calculate_region_id(lon_cut, lat_cut):
-    test = [i*10+j for i in range(1, 3) for j in range(1, 3)]
-    region_id = lat_cut*10 + lon_cut
+    test = [i*100+j for i in range(1, 3) for j in range(1, 3)]
+    region_id = lat_cut*100 + lon_cut
     return test.index(region_id)
 
 

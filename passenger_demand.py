@@ -59,7 +59,6 @@ def passenger_demand(number_of_region, t, passenger_demand_max):
     passenger_demand_slot = passenger_demand[:, t]
     return passenger_demand_slot.reshape(number_of_region, 1)
 
-
     # return passenger_demand_slot.reshape(number_of_region, 1)
 if __name__ == '__main__':
     number_of_region = 4

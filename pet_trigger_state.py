@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-13 17:09:01
-@LastEditTime: 2020-05-25 14:49:48
+@LastEditTime: 2020-06-30 15:46:55
 @LastEditors: Ye Han
 @Description: According to the triggers, give the states of PETs(charging, loaded, driving).
 @FilePath: \Online_Scheduling\pet_trigger_state.py
@@ -14,15 +14,20 @@ import numpy as np
 import pandas as pd
 
 
-def pet_trigger_state(pet_state, pet_recommended, pet_pick_up, pet_completed, number_of_pet):
+def pet_trigger_state(pet_state, pet_recommended, pet_pick_up, pet_completed, number_of_pet, charging_state, number_of_pcs):
     pet = pd.DataFrame(np.concatenate(
         [pet_state, pet_recommended, pet_pick_up, pet_completed], axis=1), columns=['state', 'recommended', 'pick_up', 'completed'])
     # pet.loc[pet['put_down'] == 1, 'state'] = 0
     pet.loc[pet['recommended'] == 1, 'state'] = 2
     pet.loc[pet['pick_up'] == 1, 'state'] = 1
     pet.loc[pet['completed'] == 1, 'state'] = 0
-    return pet['state'].values.reshape(number_of_pet, 1)
-    pass
+    shape_pet_completed = np.tile(pet_completed.T, (number_of_pcs, 1))
+    test = np.where((shape_pet_completed == 1), 0, 1)
+    charging_state = charging_state * test
+    return pet['state'].values.reshape(number_of_pet, 1), charging_state
+
+
+pass
 
 
 if __name__ == '__main__':
