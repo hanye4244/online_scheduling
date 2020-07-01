@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-16 16:11:18
-@LastEditTime: 2020-06-30 23:03:28
+@LastEditTime: 2020-07-01 09:13:51
 @LastEditors: Ye Han
 @Description:
 @FilePath: \Online_Scheduling\pet_trigger_pick_up.py
@@ -18,7 +18,7 @@ import pandas as pd
 def pet_trigger_pick_up(pet_state, pet_recommended, number_of_region, pet_region, pet_soc, pet_pick_up_region, pet_pick_up):
     for j in range(number_of_region):
         pet_available = np.where(((pet_state.flatten() == 0) & (
-            pet_recommended.flatten() != 1) & (pet_soc.flatten() > 2) & (pet_region.flatten() == j)), 1, 0)
+            pet_recommended.flatten() != 1) & (pet_soc.flatten() > 0.2) & (pet_region.flatten() == j)), 1, 0)
         # print(pet_available)
         pet_available_index = list(np.nonzero(pet_available)[0])
         # print(pet_pick_up_region)

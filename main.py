@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 14:59:51
-@LastEditTime: 2020-07-01 00:33:55
+@LastEditTime: 2020-07-01 09:33:35
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -36,6 +36,7 @@ import queue_delay_aware
 import queue_plq
 import region_id
 import region_revenue_gap
+import update_waiting_time
 
 # tag: System initialization.
 pd.set_option('display.max_columns', None)
@@ -51,17 +52,17 @@ pcs_lon = np.array([[116.30829112], [116.39142449], [116.30966109], [116.3516510
                    116.31768771], [116.3934999], [116.36383875], [116.34447545], [116.30873046]])
 pcs_region = region_id.region_id(pcs_lat, pcs_lon)
 # PCS service rate.
-number_of_plug = 8
+number_of_plug = 30
 charging_rate_of_each = 1.5
 cdq_service_rate = np.full(
     (number_of_pcs, 1), (number_of_plug * charging_rate_of_each))
 # PET battery characters.
-pet_battery_capacity = np.full((1, number_of_pet), 10)
+pet_battery_capacity = np.full((1, number_of_pet), 1)
 shape_capacity = np.tile(pet_battery_capacity, (number_of_pcs, 1))
-power_consumption = np.full((1, number_of_pet), 0.004)
+power_consumption = np.full((1, number_of_pet), 0.0004)
 shape_power_consumption = np.tile(power_consumption, (number_of_pcs, 1))
 # The service fee.
-per_service_fee = 1.5
+per_service_fee = 150
 # The revenues of PETs during each time slot.
 pet_average_revenue = 1
 # Kilometer per time slot.
@@ -86,7 +87,7 @@ passenger_demand_max = 4
 # passenger_demand_max_list = [4, 3, 2, 1, 0, -1, -2]
 passenger_demand_max_list = [4]
 # V_list = [1, 10, 20, 30, 40, 50, 80, 100, 200, 300, 400]
-V_list = [1000]
+V_list = [1, 10, 100]
 # worst_case_delay_guarantee = 1
 worst_case_delay_guarantee_list = [3]
 for V in V_list:
@@ -102,7 +103,7 @@ for V in V_list:
         pet_lon = np.array([[116.36472475], [116.3882789], [116.32234297], [116.38212617], [116.31774475], [116.30214439], [116.35531708], [116.37685496], [116.39610188], [116.30930473], [116.30828321], [116.39485067], [116.37321686], [116.37615293], [116.35095054], [116.3919535], [116.39262153], [116.30616914], [116.36412417], [116.39627141], [116.34724162], [116.35656495], [116.34527461], [116.3708312], [
             116.35659439], [116.3600659], [116.30292666], [116.35701078], [116.32588347], [116.31544209], [116.39851909], [116.32593198], [116.36915791], [116.33335334], [116.3583916], [116.37845508], [116.37318405], [116.34356882], [116.33087179], [116.3663933], [116.38774454], [116.38550602], [116.38443759], [116.3698688], [116.34138473], [116.37817646], [116.38369842], [116.38800506], [116.31696235], [116.3323365]])
         pet_soc = np.array([[0.82], [0.75], [0.78], [0.74], [0.72], [0.85], [0.80], [0.74], [0.88], [0.71], [0.77], [0.73], [0.86], [0.73], [0.83], [0.84], [0.85], [0.79], [0.85], [0.81], [0.85], [0.73], [0.84], [0.82], [
-            0.82], [0.71], [0.80], [0.82], [0.71], [0.76], [0.85], [0.74], [0.85], [0.87], [0.75], [0.87], [0.75], [0.78], [0.74], [0.88], [0.73], [0.84], [0.86], [0.85], [0.76], [0.81], [0.83], [0.82], [0.76], [0.88]]) * 10
+            0.82], [0.71], [0.80], [0.82], [0.71], [0.76], [0.85], [0.74], [0.85], [0.87], [0.75], [0.87], [0.75], [0.78], [0.74], [0.88], [0.73], [0.84], [0.86], [0.85], [0.76], [0.81], [0.83], [0.82], [0.76], [0.88]])
         pet_state = np.zeros((number_of_pet, 1))
         pet_pick_up = np.zeros((number_of_pet, 1))
         pet_put_down = np.zeros((number_of_pet, 1))
@@ -123,7 +124,7 @@ for V in V_list:
             pet_recommended = np.zeros((number_of_pet, 1))
             electricity_price_slot = electricity_price[t]
             pcs_cost = np.full((number_of_pcs, 1),
-                               electricity_price_slot * 0.1 * 10)
+                               electricity_price_slot * 0.1 * 1000)
             pet_region = region_id.region_id(pet_lat, pet_lon)
             manhattan_pcs_pet = distance.distance_between_pcs_pet(
                 pet_lat, pet_lon, pcs_lat, pcs_lon, number_of_pcs, number_of_pet)
@@ -175,15 +176,17 @@ for V in V_list:
                 service_fee, pcs_cost)
             # Tag: Update.
             charging_state = charging_state + action
+            update_waiting = update_waiting_time.update_waiting_time(
+                block_cdq, cdq_arrival_rate, number_of_pcs, cdq_service_rate, waiting_demand, pet_state, number_of_pet, charging_state)
             pet_lat, pet_lon = pet_location_time_slot.pet_location_time_slot(
                 pet_state, pet_lat, pet_lon, number_of_pet, action, pcs_lat, pcs_lon, pet_recommended, pet_completed)
             pet_soc = pet_soc_time_slot.pet_soc_time_slot(
-                pet_state, pet_soc, number_of_pet, waiting_demand)
+                pet_state, pet_soc, number_of_pet, update_waiting)
             pet_state, charging_state = pet_trigger_state.pet_trigger_state(
                 pet_state, pet_recommended, pet_pick_up, pet_completed, number_of_pet, charging_state, number_of_pcs)
             waiting_demand = pet_waiting.pet_waiting(
                 block_cdq, pev_arrival_rate, pet_power_demand, number_of_pet, action, number_of_pcs, waiting_demand, pet_completed)
-            block_cdq, waiting_demand = queue_cdq.queue_cdq(
+            block_cdq = queue_cdq.queue_cdq(
                 block_cdq, cdq_arrival_rate, number_of_pcs, cdq_service_rate, waiting_demand, pet_state, number_of_pet, charging_state)
             block_plq = queue_plq.queue_plq(
                 block_plq, plq_arrival_rate, plq_service_rate, number_of_region)
@@ -213,4 +216,4 @@ print('profit_mean_list =', profit_mean_list)
 print('block_cdq_mean_list =', block_cdq_mean_list)
 print('block_plq_mean_list =', block_plq_mean_list)
 # print('profit_list =', profit_list)
-print('-'*1000)
+print('-'*10)

@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-15 17:51:03
-@LastEditTime: 2020-06-30 22:01:06
+@LastEditTime: 2020-07-01 09:12:57
 @LastEditors: Ye Han
 @Description: PET passenger is put down random.
 @FilePath: \Online_Scheduling\pet_trigger_put_down.py
@@ -19,7 +19,7 @@ def pet_trigger_put_down(pet_state, number_of_pet, pet_soc):
     pet['pet_put_down'] = pet.apply(lambda x: np.random.randint(
         0, 2) if (x['state'] == 1) else 0, axis=1)
     pet_put_down = pet.apply(lambda x: 1 if (
-        (x['soc'] < 2) & (x['state'] == 1)) else x['pet_put_down'], axis=1)
+        (x['soc'] < 0.2) & (x['state'] == 1)) else x['pet_put_down'], axis=1)
     return pet_put_down.values.reshape(number_of_pet, 1)
 
 

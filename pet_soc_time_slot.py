@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-19 11:01:41
-@LastEditTime: 2020-06-30 22:41:20
+@LastEditTime: 2020-07-01 09:14:08
 @LastEditors: Ye Han
 @Description:
 @FilePath: \Online_Scheduling\pet_soc_time_slot.py
@@ -19,14 +19,14 @@ def pet_soc_time_slot(pet_state, pet_soc, number_of_pet, waiting_demand):
     # print('charging_test', charging_test.ravel())
     pet = pd.DataFrame(np.concatenate(
         [pet_state, pet_soc, charging_test], axis=1), columns=['state', 'soc',  'charging_test'])
-    pet['soc'] = pet.apply(lambda x: (x['soc'] - 0.5)
+    pet['soc'] = pet.apply(lambda x: (x['soc'] - 0.05)
                            if (x['state'] == 0) else x['soc'], axis=1)
-    pet['soc'] = pet.apply(lambda x: (x['soc'] - 0.5)
+    pet['soc'] = pet.apply(lambda x: (x['soc'] - 0.05)
                            if (x['state'] == 1) else x['soc'], axis=1)
-    pet['soc'] = pet.apply(lambda x: (x['soc'] + 1.5)
+    pet['soc'] = pet.apply(lambda x: (x['soc'] + 0.15)
                            if ((x['state'] == 2) & (x['charging_test'] <= 0)) else x['soc'], axis=1)
-    pet['soc'] = pet.apply(lambda x: 9.9 if (
-        x['soc'] > 9.9) else x['soc'], axis=1)
+    pet['soc'] = pet.apply(lambda x:0.99 if (
+        x['soc'] > 0.99) else x['soc'], axis=1)
     #     (x['soc'] < 15) & (x['state'] != 2)) else x['soc'], axis=1)
     # print(pet)
     return pet['soc'].values.reshape(number_of_pet, 1)

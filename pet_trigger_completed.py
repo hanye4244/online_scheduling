@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-04-16 15:46:28
-@LastEditTime: 2020-06-30 22:18:58
+@LastEditTime: 2020-07-01 09:13:07
 @LastEditors: Ye Han
 @Description: 
 @FilePath: \Online_Scheduling\pet_trigger_completed.py
@@ -17,7 +17,7 @@ def pet_trigger_completed(pet_soc, pet_state, number_of_pet):
     pet = pd.DataFrame(pet_state, columns=['state'])
     pet['soc'] = pet_soc
     pet_completed = pet.apply(
-        lambda x: 1 if ((x['soc'] > 8.5) & (x['state'] == 2.0)) else 0, axis=1)
+        lambda x: 1 if ((x['soc'] > 0.85) & (x['state'] == 2.0)) else 0, axis=1)
     pet['completed'] = pet_completed
     return pet['completed'].values.reshape(number_of_pet, 1)
     pass

@@ -2,7 +2,7 @@
 '''
 @Author: Ye Han
 @Date: 2020-05-06 10:05:34
-@LastEditTime: 2020-06-30 23:03:39
+@LastEditTime: 2020-07-01 09:13:38
 @LastEditors: Ye Han
 @Description:
 @Copyright (c) 2020 - Ye Han
@@ -43,7 +43,7 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     pet_recommended = cv.sum(x, axis=0, keepdims=True)
     pet_non_recommended = (np.ones((1, number_of_pet)) - pet_recommended)
     pet_available_ini = np.where(
-        ((pet['state'] == 0) & (pet['soc'] > 2)), 1, 0).reshape(1, number_of_pet)
+        ((pet['state'] == 0) & (pet['soc'] > 0.21)), 1, 0).reshape(1, number_of_pet)
     pet_available = cv.multiply(pet_available_ini, pet_non_recommended)
     # pet_pick_up = cv.multiply(pet_non_recommended, pet_pick_up_ini)
     pet_available_region = pet_region_matrix @ pet_available.T
@@ -71,7 +71,7 @@ def integer_opt(number_of_pet, number_of_pcs, pet_power_demand, block_cdq, pet_s
     constraints_5_right = np.full((1, number_of_pet), 1)
     constraints_6_right = np.full((number_of_pet, 1), 1)
     constraints_7_right = np.full((number_of_pet, 1), 1)
-    soc_range_test = np.where((pet_soc > 1.5), 1, 0)
+    soc_range_test = np.where((pet_soc > 0.15), 1, 0)
     soc_state_test = np.where((pet_state == 2), 1, 0)
     soc_1 = np.where((pet_soc > max_soc), 1, 0)
     constraints = [state_test + pet_non_recommended.T >= constraints_2_right,
